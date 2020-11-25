@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @Entity
@@ -41,9 +42,4 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Book> issuedBook;
 
-    public User(String email, String userName, String password){
-        this.email = email;
-        this.userName = userName;
-        this.password = password;
-    }
 }
