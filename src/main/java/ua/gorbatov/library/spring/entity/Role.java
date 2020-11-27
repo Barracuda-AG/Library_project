@@ -1,26 +1,14 @@
 package ua.gorbatov.library.spring.entity;
 
-import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
+import lombok.Getter;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@Entity
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public enum Role {
+    ADMIN("admin"), USER("user"), LIBRARIAN("librarian");
 
-    @NotBlank
     private String name;
 
-    public Role(String name){
+    Role(String name){
         this.name = name;
     }
 }

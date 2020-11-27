@@ -36,10 +36,10 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL)
     private UserData userData;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Role> roles;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Book> issuedBook;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Order> orders;
 
 }
