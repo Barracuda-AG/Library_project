@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Success</title>
+</head>
+    <h1>Administrator success logged in!</h1>
+
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+            margin: 5px;
+        }
+
+        input[type=text] {
+            width: 20%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+    </style>
+    <h1>Employees table : </h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${userList}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getFirstName()}"></td>
+            <td th:text="${user.getLastName()}"></td>
+            <td th:text="${user.getRole()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getPassword()}"></td>
+        </tr>
+        <a href="login">Go to login</a>
+
+        </tbody>
+    </table>
+</html>

@@ -1,12 +1,13 @@
 package ua.gorbatov.library.spring.entity;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 @Getter
 @Setter
@@ -15,31 +16,54 @@ import java.util.List;
 @Builder
 @ToString
 @Entity
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
-    @Email
-    @NotBlank
     private String email;
 
-    @Column(unique = true)
-    @Size(min = 2, max = 16)
-    private String userName;
-
     @Column
-    @NotBlank
     private String password;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private UserData userData;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Order> orders;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Order order;
 
+    private String firstName;
+
+    private String lastName;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>(Collections.singleton(role));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

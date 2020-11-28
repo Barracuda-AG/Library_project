@@ -32,5 +32,4 @@ public class Book {
 
     @NotBlank
     private Integer quantity;
-
 }

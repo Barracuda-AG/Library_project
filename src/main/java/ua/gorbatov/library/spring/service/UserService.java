@@ -3,43 +3,49 @@ package ua.gorbatov.library.spring.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.gorbatov.library.spring.dto.UserDTO;
+import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.entity.Role;
 import ua.gorbatov.library.spring.entity.User;
 import ua.gorbatov.library.spring.repository.UserRepository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService{
 
     @Autowired
     private UserRepository userRepository;
 
     private void create(User user, Role role) {
-        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-        user.setPassword(bcrypt.encode(user.getPassword()));
         user.setRole(role);
 
         userRepository.save(user);
     }
-    public void update(String email, Role role){
-        User userFromDB = userRepository.findByEmail(email);
-        userRepository.delete(userFromDB);
-        userFromDB.setRole(role);
-        userRepository.save(userFromDB);
+    public void update(User user, Role role){
+        user.setRole(role);
+        userRepository.save(user);
     }
 
-    public void createUser(User user, Role role){
-        create(user, Role.USER);
+    private void createUserOrder(User user, Order order){
+        user.setOrder(order);
+        userRepository.save(user);
     }
-    public void createAdmin(User user, Role role){
-        create(user, Role.ADMIN);
+
+    public void createUser(User user)
+    {
+        create(user, Role.ROLE_USER);
     }
-    public void createLibrarian(User user, Role role){
-        create(user, Role.LIBRARIAN);
+    public void createAdmin(User user)
+    {
+        create(user, Role.ROLE_ADMIN);
     }
+    public void createLibrarian(User user)
+    {
+        create(user, Role.ROLE_LIBRARIAN);
+    }
+
     public boolean isPresent(String email){
         User user = userRepository.findByEmail(email);
 
@@ -58,5 +64,16 @@ public class UserService {
     public void delete(String email){
         User user = userRepository.findByEmail(email);
         userRepository.delete(user);
+    }
+    public User createUserFromDTO(UserDTO userDTO){
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+        User user = new User();
+
+        user.setPassword(bcrypt.encode(userDTO.getPassword()));
+        user.setEmail(userDTO.getEmail());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+
+        return user;
     }
 }

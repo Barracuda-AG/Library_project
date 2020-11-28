@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name="orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +24,11 @@ public class Order {
     @NotBlank
     private LocalDate returnDate;
     @NotBlank
-    private Boolean isReturned;
+    private boolean isReturned;
 
     private Integer penalty;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     private List<Book> bookList;
 
 }

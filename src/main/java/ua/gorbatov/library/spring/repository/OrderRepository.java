@@ -7,5 +7,5 @@ import ua.gorbatov.library.spring.entity.User;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Order findByUser(User user);
+
 }

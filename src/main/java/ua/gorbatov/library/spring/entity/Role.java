@@ -1,14 +1,14 @@
 package ua.gorbatov.library.spring.entity;
 
 import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
 
 @Getter
-public enum Role {
-    ADMIN("admin"), USER("user"), LIBRARIAN("librarian");
+public enum Role implements GrantedAuthority {
+    ROLE_ADMIN, ROLE_USER, ROLE_LIBRARIAN;
 
-    private String name;
-
-    Role(String name){
-        this.name = name;
+    @Override
+    public String getAuthority() {
+        return name();
     }
 }
