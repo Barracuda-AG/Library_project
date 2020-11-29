@@ -1,6 +1,7 @@
 package ua.gorbatov.library.spring.entity;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,17 +20,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 2, max = 100)
-    private String name;
-    @Size(min = 2, max = 100)
+    private String title;
+
     private String author;
 
-    @Size(min = 2, max = 100)
     private String publisher;
 
-    @NotBlank
     private LocalDate publishDate;
 
-    @NotBlank
     private Integer quantity;
 }

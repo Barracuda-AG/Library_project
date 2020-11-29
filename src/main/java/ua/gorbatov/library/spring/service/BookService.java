@@ -2,6 +2,7 @@ package ua.gorbatov.library.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.gorbatov.library.spring.dto.BookDTO;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.repository.BookRepository;
 
@@ -14,7 +15,7 @@ public class BookService {
     private BookRepository bookRepository;
 
     public boolean save(Book book){
-        Book bookToSave = bookRepository.findByName(book.getName());
+        Book bookToSave = bookRepository.findByTitle(book.getTitle());
         if(bookToSave == null) {
             bookRepository.save(book);
             return true;
@@ -35,5 +36,15 @@ public class BookService {
             return true;
         }
         return false;
+    }
+    public Book saveBookFromDTO(BookDTO bookDTO){
+        Book book = Book.builder()
+                .title(bookDTO.getTitle())
+                .author(bookDTO.getAuthor())
+                .publisher(bookDTO.getPublisher())
+                .publishDate(bookDTO.getPublishDate())
+                .quantity(bookDTO.getQuantity()).build();
+
+        return bookRepository.save(book);
     }
 }

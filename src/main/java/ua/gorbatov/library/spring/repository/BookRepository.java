@@ -6,5 +6,5 @@ import ua.gorbatov.library.spring.entity.Book;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Book findByName(String name);
+    Book findByTitle(String title);
 }

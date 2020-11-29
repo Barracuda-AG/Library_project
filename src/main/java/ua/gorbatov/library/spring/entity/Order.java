@@ -1,6 +1,7 @@
 package ua.gorbatov.library.spring.entity;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,16 +20,16 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate issueDate;
-    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
-    @NotBlank
+
     private boolean isReturned;
 
     private Integer penalty;
 
-    @OneToMany
-    private List<Book> bookList;
+    @OneToOne
+    private Book book;
 
 }

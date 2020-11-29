@@ -28,9 +28,12 @@ public class UserService{
         userRepository.save(user);
     }
 
-    private void createUserOrder(User user, Order order){
+    public void createUserOrder(User user, Order order){
         user.setOrder(order);
         userRepository.save(user);
+    }
+    public User findByIs(Long id){
+        return userRepository.findById(id).get();
     }
 
     public void createUser(User user)
