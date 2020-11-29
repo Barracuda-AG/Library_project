@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your orders</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Issue Date</th>
+        <th>Return Date</th>
+        <th>Penalty</th>
+        <th>Is returned?</th>
+        <th>Book</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order: ${orderList}">
+        <td th:text="${order.getId()}"></td>
+        <td th:text="${order.getIssueDate()}"></td>
+        <td th:text="${order.getReturnDate()}"></td>
+        <td th:text="${order.getPenalty()}"></td>
+        <td th:text="${order.isReturned()}"></td>
+        <td th:text="${order.getBook().getTitle()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

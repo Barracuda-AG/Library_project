@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <h2>New Request</h2>
+    <form th:action="@{/user/makeorder}" th:method="post" th:object="${order}">
+            <ul>
+                <li th:each="book : ${selectedBooks}">
+                    <div>
+                        <input type="radio" name="books" th:value="${book.getId()}">
+                        <label th:text="${book.getTitle()}"></label>
+                    </div>
+                </li>
+            </ul>
+        <input type="submit" value="Order Now">
+    </form>
+</div>
+</body>
+</html>
