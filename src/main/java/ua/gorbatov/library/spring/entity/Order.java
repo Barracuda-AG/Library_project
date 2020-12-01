@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class Order {
 
     private Integer penalty;
 
-    @OneToOne
-    private Book book;
+    @OneToMany
+    private List<Book> books;
 
 }

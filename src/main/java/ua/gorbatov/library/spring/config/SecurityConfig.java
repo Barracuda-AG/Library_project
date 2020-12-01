@@ -35,16 +35,16 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
             http
                     .csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/admin/**" ,"/welcome").hasRole("ADMIN")
-                    .antMatchers("/librarian/**","/welcome").hasRole("LIBRARIAN")
-                    .antMatchers("/user**","/welcome").hasRole("USER")
-                    .antMatchers("/registration").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/librarian/**").hasRole("LIBRARIAN")
+                    .antMatchers("/user**").hasRole("USER")
+                    .antMatchers("/registration","/welcome").permitAll()
                     .and().formLogin().loginPage("/login").successForwardUrl("/welcome")
                     .permitAll()
                     .and()
-                    .logout().permitAll()
-                    .and()
-                    .logout().permitAll().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK));
+                    .logout().permitAll();
+//                    .and()
+//                    .logout().permitAll().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK));
         }
 
         @Autowired

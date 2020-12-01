@@ -14,6 +14,9 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    public Book findByTitle(String title){
+        return bookRepository.findByTitle(title);
+    }
     public boolean save(Book book){
         Book bookToSave = bookRepository.findByTitle(book.getTitle());
         if(bookToSave == null) {
@@ -46,5 +49,10 @@ public class BookService {
                 .quantity(bookDTO.getQuantity()).build();
 
         return bookRepository.save(book);
+    }
+
+    public void updateQuantity(Book book,Integer quantity){
+        book.setQuantity(quantity);
+        bookRepository.save(book);
     }
 }
