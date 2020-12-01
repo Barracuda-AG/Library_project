@@ -28,16 +28,25 @@
         <th scope="col">Return Date</th>
         <th scope="col">Penalty</th>
         <th scope="col">Is returned?</th>
-        <th scope="col">Book</th>
     </tr>
     </thead>
     <tbody>
-        <tr th:text="${user.getEmail()}"></tr>
-        <tr th:text="${order.getId()}"></tr>
-        <tr th:text="${order.getIssueDate()}"></tr>
-        <tr th:text="${order.getReturnDate()}"></tr>
-        <tr th:text="${order.getPenalty()}"></tr>
-        <tr th:text="${order.isReturned()}"></tr>
+        <td th:text="${user.getEmail()}"></td>
+        <td th:text="${order.getId()}"></td>
+        <td th:text="${order.getIssueDate()}"></td>
+        <td th:text="${order.getReturnDate()}"></td>
+        <td th:text="${order.getPenalty()}"></td>
+        <td th:text="${order.isReturned()}"></td>
+    </tbody>
+</table>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Books</th>
+
+    </tr>
+    </thead>
+    <tbody>
     <tr th:each="book: ${books}">
         <td th:text="${book.getTitle()}"></td>
     </tr>

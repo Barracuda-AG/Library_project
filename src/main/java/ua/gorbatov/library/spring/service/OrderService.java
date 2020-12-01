@@ -35,11 +35,11 @@ public class OrderService {
     }
 
     private Order checkPenalty(Order order) {
-//        LocalDate now = LocalDate.now();
-//        LocalDate returnDate = order.getReturnDate();
-//        if (returnDate.isBefore(now) && !order.isReturned()) {
-//            order.setPenalty(PENALTY);
-//        }
+        LocalDate now = LocalDate.now();
+        LocalDate returnDate = order.getReturnDate();
+        if (returnDate.isBefore(now) && !order.isReturned()) {
+            order.setPenalty(PENALTY);
+        }
         return order;
     }
 

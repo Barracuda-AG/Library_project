@@ -21,30 +21,15 @@
 </div>
     <h1>Administrator page</h1>
 
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            padding: 10px;
-            margin: 5px;
-        }
-
-        input[type=text] {
-            width: 20%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            box-sizing: border-box;
-        }
-    </style>
     <h1>All users : </h1>
-    <table>
+    <table class="table table-striped">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>First name</th>
-            <th>Last name</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Password</th>
+            <th scope="col">ID</th>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Role</th>
+            <th scope="col">Email</th>
         </tr>
         </thead>
         <tbody>
@@ -54,7 +39,6 @@
             <td th:text="${user.getLastName()}"></td>
             <td th:text="${user.getRole()}"></td>
             <td th:text="${user.getEmail()}"></td>
-            <td th:text="${user.getPassword()}"></td>
         </tr>
 
 

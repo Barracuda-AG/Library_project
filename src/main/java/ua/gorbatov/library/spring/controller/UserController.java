@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.entity.Order;
@@ -41,14 +42,12 @@ public class UserController {
     @Transactional
     @PostMapping(value = "/user/makeorder")
     public String makeNewOrder(@RequestParam(name = "books") List<Book> books,
-                               BindingResult bindingResult, Principal principal) {
-        if (bindingResult.hasErrors()) {
-            return "/user/showorder";
-        }
+                               Model model,Principal principal) {
+
         String userName = principal.getName();
         User user = userService.findByName(userName);
 
-        if(user == null || user.getOrder() != null) return "/user/showorder";
+        if(user == null || user.getOrder() != null) return "/user/makeorder";
         List<Book> booksFromDb = new ArrayList<>();
         for(Book book: books) {
             booksFromDb.add(bookService.findByTitle(book.getTitle()));
@@ -59,14 +58,14 @@ public class UserController {
 
             userService.createUserOrder(user,order);
 
-        return "redirect: /user/showorder";
+        return "/user/showorder";
     }
 
     @GetMapping(value = "/user/showorder")
     public String showOrder(Model model, Principal principal) {
         String userName = principal.getName();
         User user = userService.findByName(userName);
-
+        if(user.getOrder()== null) return "/user/makeorder";
         Long orderId = user.getOrder().getId();
         Order order = orderService.getOrderById(orderId);
 

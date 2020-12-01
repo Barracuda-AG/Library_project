@@ -64,7 +64,7 @@ public class AdminController {
     public String editUserPost(@RequestParam Long id, Model model){
         model.addAttribute("userToChange", userService.getUser(id));
         userService.update(userService.getUser(id), Role.ROLE_LIBRARIAN);
-        return "redirect: /admin/success";
+        return "/admin/success";
     }
 
     @PostMapping(value = "/admin/edituser")
@@ -73,7 +73,7 @@ public class AdminController {
                                    Model model){
         model.addAttribute("userToChange", userService.getUser(id));
         userService.update(userService.getUser(id), Role.ROLE_USER);
-        return "redirect: /admin/success";
+        return "/admin/success";
     }
     @GetMapping(value = "/admin/delete")
     public String delete(Model model){
