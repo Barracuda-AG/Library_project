@@ -31,7 +31,7 @@
 </div>
 <h1>[[#{login.title}]]</h1>
 <h2>[[#{greetings}]]</h2>
-<div th:if="${param.error}" class="alert alert-error">Invalid username and password</div>
+<div class="alert alert-danger" th:if="${param.error}">Invalid username and password</div>
 
 <div th:value="message"></div>
 <form th:action="@{/login}" method="post">

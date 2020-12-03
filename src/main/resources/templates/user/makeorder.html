@@ -18,13 +18,19 @@
             <li class="nav-item">
                 <a class="nav-link" href="/user/showorder">Show order</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/totalbooks">Make order</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user/cabinet">Cabinet</a>
+            </li>
         </ul>
         </nav>
     </div>
 </div>
 <div>
     <h2>New Request</h2>
-    <form th:action="@{/user/makeorder}" th:method="post" th:object="${order}">
+    <form th:action="@{/user/makeorderPost}" th:method="post" th:object="${order}">
             <ul>
                 <li th:each="book : ${selectedBooks}">
                     <div>

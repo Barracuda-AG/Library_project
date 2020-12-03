@@ -12,30 +12,33 @@
         <nav class="navbar navbar-expand bg-light" >
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/login">[[#{login}]]</a>
             </li>
         </ul>
         </nav>
     </div>
 </div>
-<h1>Registration Page</h1>
-<h2>To register enter your credentials</h2>
-<form th:action="@{/registration}" method="post">
-    <p>First Name: </p>
-    <input type="text" name="firstName"/><br/>
+<h1>[[#{registration.page}]]</h1>
+<h2>[[#{greetings}]]</h2>
+<form th:action="@{/registration}" method="post" th:object="${userDTO}">
+    <p>[[#{name.first}]]</p>
+    <input type="text" name="firstName"  th:field="*{firstName}"/>
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Name error</div><br/>
     <br/>
-    <p>Last Name: </p>
-    <input type="text" name="lastName"/><br/>
+    <p>[[#{name.last}]]</p>
+    <input type="text" name="lastName"  th:field="*{lastName}"/>
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Name error</div><br/>
     <br/>
-    <p>Email: </p>
-    <input type="email" name="email"/><br/>
+    <p>[[#{email}]]</p>
+    <input type="email" name="email"  th:field="*{email}"/>
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Name error</div><br/>
     <br/>
-    <p>Password: </p>
-    <input type="password" name="password">
+    <p>[[#{password}]]</p>
+    <input type="password" name="password"  th:field="*{password}">
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Name error</div>
     <br/>
-    <input type="submit" value="Register">
+    <input type="submit" th:value="#{registration}">
 </form>
-<a href="login">Go to login page</a>
 
 </body>
 </html>

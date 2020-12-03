@@ -1,6 +1,10 @@
 package ua.gorbatov.library.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.gorbatov.library.spring.dto.BookDTO;
 import ua.gorbatov.library.spring.entity.Book;
@@ -29,10 +33,6 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Book getOne(Long id) {
-        return (bookRepository.findById(id).get());
-    }
-
     public boolean delete(Long id){
         if(bookRepository.findById(id).isPresent()) {
             bookRepository.deleteById(id);
@@ -53,6 +53,12 @@ public class BookService {
 
     public void updateQuantity(Book book,Integer quantity){
         book.setQuantity(quantity);
-        bookRepository.save(book);
+
+    }
+    public Page<Book> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection){
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField) :
+                Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo -1, pageSize, sort);
+        return this.bookRepository.findAll(pageable);
     }
 }

@@ -13,14 +13,20 @@
         <nav class="navbar navbar-expand bg-light" >
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/admin/success">Login</a>
+                <a class="nav-link" href="/admin/success">[[#{user.all}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/delete">[[#{user.delete}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/allbooks">[[#{books.all}]]</a>
             </li>
         </ul>
         </nav>
     </div>
 </div>
 <div>
-    <h2>Edit User</h2>
+    <h2>[[#{user.edit}]]</h2>
     <form th:action="@{/admin/edituser}"  th:method="post">
         <ul>
             <li th:each="user : ${librarians}">
@@ -31,7 +37,7 @@
             </li>
         </ul>
 
-        <input type="submit" value="Change role to user">
+        <input type="submit" th:value="#{to.user}">
     </form>
     <form th:action="@{/admin/editLibrarian}"  th:method="post">
         <ul>
@@ -42,7 +48,7 @@
                 </div>
             </li>
         </ul>
-        <input name="action" id="toLibrarian" type="submit" value="Change role to librarian">
+        <input name="action" id="toLibrarian" type="submit" th:value="#{to.librarian}">
     </form>
 </div>
 </body>

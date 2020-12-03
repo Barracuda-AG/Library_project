@@ -12,8 +12,13 @@ import ua.gorbatov.library.spring.repository.UserRepository;
 @Service
 @Qualifier("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
+
     private UserRepository userRepository;
+    @Autowired
+    public UserDetailsServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(s);

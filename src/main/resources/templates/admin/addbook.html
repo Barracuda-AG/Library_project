@@ -13,30 +13,37 @@
         <nav class="navbar navbar-expand bg-light" >
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/admin/allbooks">All books</a>
+                <a class="nav-link" href="/admin/allbooks">[[#{books.all}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/success">[[#{user.all}]]</a>
             </li>
         </ul>
         </nav>
     </div>
 </div>
-<h2>To add book enter data:</h2>
+<h2>[[#{book.enter}]]</h2>
 <form th:action="@{/admin/addbook}" th:object="${book}" method="post">
-    <p>Book title: </p>
-    <input type="text" name="title"/><br/>
+    <p>[[#{title}]]</p>
+    <input type="text" name="title" th:field="*{title}"/>
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Name error</div> <br/>
     <br/>
-    <p>Author: </p>
-    <input type="text" name="author"/><br/>
+    <p>[[#{author}]]</p>
+    <input type="text" name="author"  th:field="*{author}"/>
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Name error</div><br/>
     <br/>
-    <p>Publisher: </p>
-    <input type="text" name="publisher"/><br/>
+    <p>[[#{publisher}]]</p>
+    <input type="text" name="publisher"  th:field="*{publisher}"/>
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}">Name error</div><br/>
     <br/>
-    <p>Publish date: </p>
+    <p>[[#{publish.date}]]</p>
     <input type="date"  name="publishDate">
     <br/>
-    <p>Quantity: </p>
-    <input type="number" name="quantity">
+    <p>[[#{quantity}]]</p>
+    <input type="number" name="quantity"  th:field="*{quantity}">
+    <div class="alert alert-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Name error</div>
     <br/>
-    <input type="submit" value="Add book">
+    <input type="submit" th:value="#{book.add}">
 </form>
 
 

@@ -14,8 +14,11 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     private void create(User user, Role role) {
 
@@ -31,10 +34,10 @@ public class UserService {
 
     public void createUserOrder(User user, Order order) {
         user.setOrder(order);
-        userRepository.save(user);
+
     }
 
-    public User findByIs(Long id) {
+    public User findById(Long id) {
         return userRepository.findById(id).get();
     }
 
@@ -59,7 +62,10 @@ public class UserService {
 
         return user != null;
     }
-
+    public void clearOrder(User user){
+       user.setOrder(null);
+       userRepository.save(user);
+    }
     public User getUser(String email) {
         return userRepository.findByEmail(email);
     }

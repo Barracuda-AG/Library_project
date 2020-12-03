@@ -21,6 +21,12 @@ public class OrderService {
     public void save(Order order) {
         orderRepository.save(order);
     }
+    public Order find(Order order){
+        return orderRepository.getOne(order.getId());
+    }
+    public void delete(Order order){
+        orderRepository.delete(order);
+    }
 
     public List<Order> allOrders() {
         return orderRepository.findAll();
