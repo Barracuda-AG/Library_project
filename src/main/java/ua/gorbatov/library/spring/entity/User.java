@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * The {@code User} class used for representing User of the library
+ * @author Oleksandr Gorbatov
+ */
 @Getter
 @Setter
 @NoArgsConstructor

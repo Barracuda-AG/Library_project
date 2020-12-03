@@ -8,7 +8,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
-
+/**
+ * The {@code Book} class used for representing books storage
+ * @author Oleksandr Gorbatov
+ */
 @Getter
 @Setter
 @NoArgsConstructor

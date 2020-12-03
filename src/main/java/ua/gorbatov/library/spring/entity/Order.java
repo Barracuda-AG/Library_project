@@ -6,7 +6,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-
+/**
+ * The {@code Order} class used for storage user's order
+ * @author Oleksandr Gorbatov
+ */
 @Getter
 @Setter
 @NoArgsConstructor

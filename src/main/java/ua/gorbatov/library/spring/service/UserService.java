@@ -66,6 +66,10 @@ public class UserService {
        user.setOrder(null);
        userRepository.save(user);
     }
+    public User findByOrderID(Order order){
+        User user = userRepository.findAll().stream().filter(a -> a.getOrder()==order).findFirst().get();
+        return user;
+    }
     public User getUser(String email) {
         return userRepository.findByEmail(email);
     }

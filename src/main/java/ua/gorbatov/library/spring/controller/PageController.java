@@ -14,6 +14,11 @@ import ua.gorbatov.library.spring.service.UserService;
 
 import javax.validation.Valid;
 
+/**
+ * The {@code PageController} class is used for access control operations for main pages
+ *
+ * @author Oleksandr Gorbatov
+ */
 @Controller
 public class PageController {
 
@@ -26,19 +31,29 @@ public class PageController {
         this.userService = userService;
     }
 
+    /**
+     * Method provide get mapping to login
+     * @return login page
+     */
     @GetMapping("/login")
     public String login() {
         logger.info("Login page visited");
         return "login";
     }
-
+    /**
+     * Method provide pos mapping to login
+     * @return welcome page
+     */
     @ResponseStatus(value = HttpStatus.OK)
     @PostMapping("/login")
     public String getLogin() {
         logger.info("Login successul");
         return "/welcome";
     }
-
+    /**
+     * Method provide get mapping to registration
+     * @return registration page
+     */
     @GetMapping("/registration")
     public String registration(Model model)
     {
@@ -47,6 +62,10 @@ public class PageController {
         return "/registration";
     }
 
+    /**
+     * Method provide post mapping to registration
+     * @return login page
+     */
     @PostMapping("/registration")
     @ResponseStatus(value = HttpStatus.CREATED)
     public String setRegistration(@Valid @ModelAttribute("userDTO") UserDTO userDTO, BindingResult bindingResult) {
@@ -56,11 +75,18 @@ public class PageController {
         return "/login";
     }
 
+    /**
+     * Method provide get mapping to welcome page
+     * @return welcome page
+     */
     @GetMapping("/welcome")
     public String welcome() {
         return "/welcome";
     }
-
+    /**
+     * Method provide post mapping to welcome page
+     * @return welcome page
+     */
     @PostMapping("/welcome")
     public String welcomePost() {
         return "/welcome";

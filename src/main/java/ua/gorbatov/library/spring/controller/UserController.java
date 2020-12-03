@@ -19,16 +19,26 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * The {@code UserController} class is used for access control operations for users
+ *
+ * @author Oleksandr Gorbatov
+ */
 @Controller
 public class UserController {
 
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
-
+    /**
+     * The value is used to access book repository and operations
+     */
     private BookService bookService;
-
+    /**
+     * The value is used to access order repository and operations
+     */
     private OrderService orderService;
-
+    /**
+     * The value is used to access user repository and operations
+     */
     private UserService userService;
 
     @Autowired
@@ -37,18 +47,32 @@ public class UserController {
         this.orderService = orderService;
         this.userService = userService;
     }
-
+    /**
+     * Method is used for mapping get request to make order
+     *
+     * @param model used for adding attribute to get all books
+     * @return String address of page
+     */
     @GetMapping(value = "/user/makeorder")
     public String makeOrder(Model model) {
         List<Book> books = bookService.getAll().stream()
                 .filter(o -> o.getQuantity() > 0)
                 .collect(Collectors.toList());
+
         model.addAttribute("order", new Order());
         model.addAttribute("selectedBooks", books);
+
         logger.info("Make order page is visited");
         return "/user/makeorder";
     }
-
+    /**
+     * Method is used for mapping get request to cancel order
+     * for current user
+     *
+     * @param model used for adding attribute to get all books
+     * @param principal used for get current user name
+     * @return String address of page
+     */
     @GetMapping(value = "/user/cancelorder")
     public String cancel(Model model, Principal principal) {
         String userName = principal.getName();
@@ -59,6 +83,12 @@ public class UserController {
         return "/user/cancelorder";
     }
 
+    /**
+     * Method used to provide post mapping to return order
+     * @param model used to add attribute order which get current order
+     * @param principal to get current user name
+     * @return String redirect to page makeorder
+     */
     @PostMapping(value = "/user/returnBook")
     public String returnBook(Model model, Principal principal) {
         String userName = principal.getName();
@@ -78,6 +108,12 @@ public class UserController {
         return "/user/makeorder";
     }
 
+    /**
+     * Method is used for mapping get request to personal cabinet
+     * @param model used to add attribute user
+     * @param principal used to get current user's name
+     * @return String address of page
+     */
     @GetMapping(value = "/user/cabinet")
     public String cabinet(Model model, Principal principal) {
         String userName = principal.getName();
@@ -87,6 +123,13 @@ public class UserController {
         return "/user/cabinet";
     }
 
+    /**
+     * Method used to provide post mapping to make order
+     * @param books used to get list fo books
+     * @param model to add attribute
+     * @param principal to get current name of user
+     * @return redirect to page totalbooks
+     */
     @Transactional
     @PostMapping(value = "/user/makeorderPost")
     public String makeNewOrder(@RequestParam(name = "books") List<Book> books,
@@ -112,6 +155,12 @@ public class UserController {
         return "/user/totalbooks";
     }
 
+    /**
+     * Method provide get request to show order
+     * @param model to add attribute
+     * @param principal to get current user name
+     * @return String path to showorder page
+     */
     @GetMapping(value = "/user/showorder")
     public String showOrder(Model model, Principal principal) {
         String userName = principal.getName();
@@ -130,6 +179,14 @@ public class UserController {
         return "/user/showorder";
     }
 
+    /**
+     * Method is used for pagination and sorting of list of books
+     * @param pageNo current page number
+     * @param sortField present field sort
+     * @param sortDir preset sort direction
+     * @param model to add attributes
+     * @return String address of pages
+     */
     @GetMapping(value = "/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
                                 @RequestParam("sortField") String sortField,
@@ -152,6 +209,11 @@ public class UserController {
         return "/user/totalbooks";
     }
 
+    /**
+     * Method provide get request to show all books
+     * @param model to add attributes order and selectedBooks
+     * @return String paginated pages
+     */
     @GetMapping(value = "/user/totalbooks")
     public String viewBooks(Model model) {
         List<Book> books = bookService.getAll().stream()

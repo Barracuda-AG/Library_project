@@ -18,17 +18,29 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The {@code LibrarianController} class is used for access control operations for librarian
+ *
+ * @author Oleksandr Gorbatov
+ */
 @Controller
 @RequestMapping("/librarian")
 public class LibrarianController {
 
     private static Logger logger = LoggerFactory.getLogger(LibrarianController.class);
-
+    /**
+     * The value is used to access book repository and operations
+     */
     private BookService bookService;
-
+    /**
+     * The value is used to access user repository and operations
+     */
     private UserService userService;
-
+    /**
+     * The value is used to access order repository and operations
+     */
     private OrderService orderService;
+
     @Autowired
     public LibrarianController(BookService bookService, UserService userService, OrderService orderService) {
         this.bookService = bookService;
@@ -36,6 +48,12 @@ public class LibrarianController {
         this.orderService = orderService;
     }
 
+    /**
+     * Method is used for mapping get request to show all books
+     *
+     * @param model used for adding attribute to get all books
+     * @return String address of page
+     */
     @GetMapping("/allbooks")
     public String allBooks(Model model) {
         List<Book> books = bookService.getAll();
@@ -45,11 +63,17 @@ public class LibrarianController {
         return "librarian/allbooks";
     }
 
+    /**
+     * Method is used for get mapping to access to all orders
+     *
+     * @param model used for adding attributes orders and users to get all orders
+     * @return String address of the page
+     */
     @GetMapping(value = "/allorders")
     public String cancel(Model model) {
         List<Order> orders = orderService.allOrders();
         List<User> usersWithOrder = userService.getAllUsers().stream()
-                .filter(a -> a.getOrder()!= null)
+                .filter(a -> a.getOrder() != null)
                 .collect(Collectors.toList());
 
         model.addAttribute("orders", orders);
@@ -58,23 +82,31 @@ public class LibrarianController {
         logger.info("All orders page visited by librarian");
         return "/librarian/allorders";
     }
+
+    /**
+     * Method used to provide post mapping to cancel order
+     *
+     * @param id    used to get order id
+     * @param model used to add attribute orderToDelete
+     * @return String to redirect
+     */
     @Transactional
     @PostMapping(value = "/returnBook")
     public String returnBook(@RequestParam Long id, Model model) {
         Order order = orderService.getOrderById(id);
-        if(order == null) {
-            logger.info("Unable to cancel order");
-            return "/librarian/allorders";
-        }
 
         model.addAttribute("orderToDelete", order);
-        User user = userService.findById(order.getId());
+        User user = userService.findByOrderID(order);
+        if (order != null) {
 
-        logger.info("Deleting order #: " + order.getId());
-        userService.clearOrder(user);
-        orderService.delete(order);
-        logger.info("Deleting successful");
-        return"/librarian/allbooks";
-   }
+            userService.clearOrder(user);
+            orderService.delete(order);
+
+            logger.info("Deleting successful");
+            return "/librarian/allbooks";
+        }
+        logger.info("Unable to cancel order");
+        return "/librarian/allorders";
+    }
 
 }
