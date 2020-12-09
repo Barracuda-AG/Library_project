@@ -11,6 +11,7 @@ import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.repository.BookRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -30,7 +31,9 @@ public class BookService {
         return false;
     }
     public List<Book> getAll() {
-        return bookRepository.findAll();
+        return bookRepository.findAll().stream()
+                .filter(o -> o.getQuantity() > 0)
+                .collect(Collectors.toList());
     }
 
     public boolean delete(Long id){

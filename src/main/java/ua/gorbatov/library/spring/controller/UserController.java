@@ -4,12 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.entity.User;
+import ua.gorbatov.library.spring.exception.OrderNotFoundException;
+import ua.gorbatov.library.spring.exception.UserNotFoundException;
 import ua.gorbatov.library.spring.service.BookService;
 import ua.gorbatov.library.spring.service.OrderService;
 import ua.gorbatov.library.spring.service.UserService;
@@ -18,6 +21,7 @@ import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 /**
  * The {@code UserController} class is used for access control operations for users
@@ -48,24 +52,6 @@ public class UserController {
         this.userService = userService;
     }
     /**
-     * Method is used for mapping get request to make order
-     *
-     * @param model used for adding attribute to get all books
-     * @return String address of page
-     */
-    @GetMapping(value = "/user/makeorder")
-    public String makeOrder(Model model) {
-        List<Book> books = bookService.getAll().stream()
-                .filter(o -> o.getQuantity() > 0)
-                .collect(Collectors.toList());
-
-        model.addAttribute("order", new Order());
-        model.addAttribute("selectedBooks", books);
-
-        logger.info("Make order page is visited");
-        return "/user/makeorder";
-    }
-    /**
      * Method is used for mapping get request to cancel order
      * for current user
      *
@@ -93,19 +79,13 @@ public class UserController {
     public String returnBook(Model model, Principal principal) {
         String userName = principal.getName();
         User user = userService.findByName(userName);
-        Order userOrder = user.getOrder();
+        Optional<Order> userOrder = userService.findUserOrder(userName);
         model.addAttribute("order", userOrder);
 
-        if (userOrder != null) {
-            List<Book> listBooks = userOrder.getBooks();
-            logger.info("Books returned successfuly");
-            for (Book book : listBooks) bookService.updateQuantity(book, book.getQuantity() + 1);
-            userService.clearOrder(user);
-            orderService.delete(userOrder);
-        }
+        userService.returnBooks(user);
+        userService.clearOrder(user);
 
-        logger.warn("Unable to return books");
-        return "/user/makeorder";
+        return "/user/cabinet";
     }
 
     /**
@@ -126,28 +106,22 @@ public class UserController {
     /**
      * Method used to provide post mapping to make order
      * @param books used to get list fo books
-     * @param model to add attribute
      * @param principal to get current name of user
      * @return redirect to page totalbooks
      */
     @Transactional
     @PostMapping(value = "/user/makeorderPost")
     public String makeNewOrder(@RequestParam(name = "books") List<Book> books,
-                               Model model, Principal principal) {
+                               Principal principal) {
 
         String userName = principal.getName();
         User user = userService.findByName(userName);
 
-        if (user == null || user.getOrder() != null){
-            logger.warn("Unable to make order!");
-            return "/user/totalbooks";
-        }
         List<Book> booksFromDb = new ArrayList<>();
         for (Book book : books) {
             booksFromDb.add(bookService.findByTitle(book.getTitle()));
             bookService.updateQuantity(book, book.getQuantity() - 1);
         }
-
         Order order = orderService.createOrder(booksFromDb);
 
         userService.createUserOrder(user, order);
@@ -165,10 +139,7 @@ public class UserController {
     public String showOrder(Model model, Principal principal) {
         String userName = principal.getName();
         User user = userService.findByName(userName);
-        if (user.getOrder() == null) return "/user/totalbooks";
-        Long orderId = user.getOrder().getId();
-        Order order = orderService.getOrderById(orderId);
-
+        Order order = orderService.getOrderByUser(user);
         List<Book> books = order.getBooks();
 
         model.addAttribute("order", order);
@@ -223,5 +194,10 @@ public class UserController {
         model.addAttribute("selectedBooks", books);
         logger.info("Visited total books page");
         return findPaginated(1, "title", "asc", model);
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({UserNotFoundException.class, OrderNotFoundException.class})
+    public String handleException(){
+        return "/user/exception";
     }
 }

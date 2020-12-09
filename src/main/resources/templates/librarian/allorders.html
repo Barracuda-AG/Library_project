@@ -22,7 +22,7 @@
 <div>
     <h2>[[#{order.cancel}]]</h2>
 
-    <form th:action="@{/librarian/returnBook}" th:object="${orders}" th:method="post">
+    <form th:action="@{/librarian/returnBook}" th:method="post">
         <ul>
             <li th:each="user : ${users}">
 

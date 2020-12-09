@@ -71,12 +71,8 @@ public class LibrarianController {
      */
     @GetMapping(value = "/allorders")
     public String cancel(Model model) {
-        List<Order> orders = orderService.allOrders();
-        List<User> usersWithOrder = userService.getAllUsers().stream()
-                .filter(a -> a.getOrder() != null)
-                .collect(Collectors.toList());
+        List<User> usersWithOrder = userService.findUserWithOrders();
 
-        model.addAttribute("orders", orders);
         model.addAttribute("users", usersWithOrder);
 
         logger.info("All orders page visited by librarian");
@@ -90,23 +86,17 @@ public class LibrarianController {
      * @param model used to add attribute orderToDelete
      * @return String to redirect
      */
-    @Transactional
     @PostMapping(value = "/returnBook")
     public String returnBook(@RequestParam Long id, Model model) {
         Order order = orderService.getOrderById(id);
 
         model.addAttribute("orderToDelete", order);
         User user = userService.findByOrderID(order);
-        if (order != null) {
 
-            userService.clearOrder(user);
-            orderService.delete(order);
+        userService.clearOrder(user);
 
-            logger.info("Deleting successful");
-            return "/librarian/allbooks";
-        }
-        logger.info("Unable to cancel order");
-        return "/librarian/allorders";
+        logger.info("Order is canceled");
+        return "/librarian/allbooks";
     }
 
 }

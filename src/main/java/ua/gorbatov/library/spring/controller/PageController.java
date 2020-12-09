@@ -91,4 +91,8 @@ public class PageController {
     public String welcomePost() {
         return "/welcome";
     }
+    @GetMapping("/accessDenied")
+    public String access(){
+        return "/accessDenied";
+    }
 }

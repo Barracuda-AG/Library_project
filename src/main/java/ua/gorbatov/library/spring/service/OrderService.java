@@ -4,17 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.entity.Order;
+import ua.gorbatov.library.spring.entity.User;
+import ua.gorbatov.library.spring.exception.OrderNotFoundException;
 import ua.gorbatov.library.spring.repository.OrderRepository;
+import ua.gorbatov.library.spring.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private static final Integer PENALTY = 20;
 
@@ -33,11 +39,14 @@ public class OrderService {
     }
 
     public Order getOrderById(Long id) {
-        if (orderRepository.findById(id).isPresent()) {
-            Order order = orderRepository.findById(id).get();
+            Order order = orderRepository.findById(id).orElseThrow(
+                    OrderNotFoundException::new
+            );
             return checkPenalty(order);
-        }
-        return null;
+    }
+    public Order getOrderByUser(User user){
+        if(user.getOrder() != null) return user.getOrder();
+        throw new OrderNotFoundException();
     }
 
     private Order checkPenalty(Order order) {

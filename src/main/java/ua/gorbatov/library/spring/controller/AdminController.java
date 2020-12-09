@@ -1,12 +1,13 @@
 package ua.gorbatov.library.spring.controller;
 
+import ua.gorbatov.library.spring.exception.OrderNotFoundException;
+import ua.gorbatov.library.spring.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.gorbatov.library.spring.dto.BookDTO;
 import ua.gorbatov.library.spring.entity.Book;
@@ -17,7 +18,6 @@ import ua.gorbatov.library.spring.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The {@code AdminController} class is used for access control operations for admin
@@ -72,16 +72,12 @@ public class AdminController {
      * Method used to provide post mapping to add book
      *
      * @param bookDTO   used to add book information
-     * @param bindingResult used to get errors
      * @return String to redirect
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/admin/addbook")
-    public String addNewBook(@Valid @ModelAttribute("book") BookDTO bookDTO,
-                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/admin/addbook";
-        }
+    public String addNewBook(@Valid @ModelAttribute("book") BookDTO bookDTO) {
+
         bookService.saveBookFromDTO(bookDTO);
 
         logger.info("Created book " + bookDTO.getTitle());
@@ -109,19 +105,26 @@ public class AdminController {
      */
     @GetMapping(value = "/admin/edituser")
     public String editUser(Model model) {
-        List<User> librarians = userService.getAllUsers()
-                .stream().filter(o -> o.getRole().equals(Role.ROLE_LIBRARIAN))
-                .collect(Collectors.toList());
 
-        model.addAttribute("librarians", librarians);
-
-        List<User> users = userService.getAllUsers()
-                .stream().filter(o -> o.getRole().equals(Role.ROLE_USER))
-                .collect(Collectors.toList());
+        List<User> users = userService.getOnlyUsers();
 
         model.addAttribute("users", users);
         logger.info("Edit user page is visited");
         return "/admin/edituser";
+    }
+    /**
+     * Method is used for mapping get request to edit user
+     *
+     * @param model used for adding attribute users and librarians
+     * @return String address of page
+     */
+    @GetMapping(value="/admin/editlibrarian")
+    public String editLibrarian(Model model){
+        List<User> librarians = userService.getOnlyLibrarians();
+
+        model.addAttribute("librarians", librarians);
+        logger.info("Edit librarian page is visited");
+        return "/admin/editlibrarian";
     }
     /**
      * Method is used for post request to edit user
@@ -129,7 +132,7 @@ public class AdminController {
      * @param model used for adding attribute book
      * @return String address of page
      */
-    @PostMapping(value = "/admin/editLibrarian")
+    @PostMapping(value = "/admin/editlibrarian")
     @ResponseStatus(HttpStatus.OK)
     public String editUserPost(@RequestParam Long id, Model model) {
 
@@ -164,9 +167,7 @@ public class AdminController {
      */
     @GetMapping(value = "/admin/delete")
     public String delete(Model model) {
-        List<User> users = userService.getAllUsers().stream()
-                .filter(o -> !o.getRole().equals(Role.ROLE_ADMIN))
-                .collect(Collectors.toList());
+        List<User> users = userService.getUsersExceptAdmin();
 
         model.addAttribute("users", users);
 
@@ -219,6 +220,12 @@ public class AdminController {
             bookService.delete(book.getId());
         }
         logger.info("Books are deleted");
-        return "/user/totalbooks";
+        return "/admin/success";
     }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({UserNotFoundException.class, OrderNotFoundException.class})
+    public String handleException(){
+        return "/admin/exception";
+    }
+
 }

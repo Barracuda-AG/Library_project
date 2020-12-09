@@ -38,13 +38,15 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/librarian/**").hasRole("LIBRARIAN")
                     .antMatchers("/user**").hasRole("USER")
-                    .antMatchers("/registration","/welcome").permitAll()
+                    .antMatchers("/registration","/welcome","/accessDenied").permitAll()
                     .and().formLogin().loginPage("/login").successForwardUrl("/welcome")
                     .permitAll()
                     .and()
-                    .logout().permitAll();
-//                    .and()
-//                    .logout().permitAll().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK));
+                    .logout().permitAll()
+                    .and()
+                    .exceptionHandling()
+                    .accessDeniedPage("/accessDenied");
+
         }
 
         @Autowired

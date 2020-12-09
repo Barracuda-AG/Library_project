@@ -27,19 +27,8 @@
 </div>
 <div>
     <h2>[[#{user.edit}]]</h2>
-    <form th:action="@{/admin/edituser}"  th:method="post">
-        <ul>
-            <li th:each="user : ${librarians}">
-                <div>
-                    <input type="radio" name="id" th:value="${user.getId()}">
-                    <label th:text="${user.getEmail()}"></label>
-                </div>
-            </li>
-        </ul>
 
-        <input type="submit" th:value="#{to.user}">
-    </form>
-    <form th:action="@{/admin/editLibrarian}"  th:method="post">
+    <form th:action="@{/admin/editlibrarian}"  th:method="post">
         <ul>
             <li th:each="user : ${users}">
                 <div>

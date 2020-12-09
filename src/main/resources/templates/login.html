@@ -35,13 +35,18 @@
 
 <div th:value="message"></div>
 <form th:action="@{/login}" method="post">
+	<div class="form-group">
     <p>[[#{login}]]</p>
     <input type="email" id="username" name="username"/><br/>
+	</div>
     <br/>
+	<div class="form-group">
     <p>[[#{password}]]</p>
     <input type="password" id="password" name="password">
     <br/>
-    <input type="submit" th:value="#{login}"/>
+	</div>
+
+    <button type="submit" class="btn btn-primary">[[#{login}]]</button>
 
 </form>
 </body>
