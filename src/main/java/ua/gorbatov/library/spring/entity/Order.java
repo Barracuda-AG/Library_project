@@ -1,36 +1,37 @@
 package ua.gorbatov.library.spring.entity;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
-
+/**
+ * The {@code Order} class used for storage user's order
+ * @author Oleksandr Gorbatov
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name="orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate issueDate;
-    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
-    @NotBlank
-    private Boolean isReturned;
+
+    private boolean isReturned;
 
     private Integer penalty;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Book> bookList;
+    @OneToMany
+    private List<Book> books;
 
 }
