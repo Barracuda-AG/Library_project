@@ -31,7 +31,7 @@ public class Order {
 
     private Integer penalty;
 
-    @OneToMany
+    @ManyToMany
     private List<Book> books;
 
 }

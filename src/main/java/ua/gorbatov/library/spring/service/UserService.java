@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+
     @Autowired
     public UserService(UserRepository userRepository,
-                       OrderRepository orderRepository)
-    {
+                       OrderRepository orderRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
     }
@@ -50,10 +50,11 @@ public class UserService {
 
     public User findByName(String name) {
         return userRepository.findByEmail(name).orElseThrow(
-                ()-> new UserNotFoundException("User not found in DataBase")
+                () -> new UserNotFoundException("User not found in DataBase")
         );
     }
-    public Optional<Order> findUserOrder(String name){
+
+    public Optional<Order> findUserOrder(String name) {
         User user = userRepository.findByEmail(name).get();
         return Optional.ofNullable(user.getOrder());
 
@@ -73,16 +74,17 @@ public class UserService {
     }
 
     @Transactional
-    public void clearOrder(User user){
-       orderRepository.delete(user.getOrder());
-       user.setOrder(null);
-       userRepository.save(user);
+    public void clearOrder(User user) {
+        orderRepository.delete(user.getOrder());
+        user.setOrder(null);
+        userRepository.save(user);
     }
-    public User findByOrderID(Order order){
-       return userRepository.findAll().stream()
-                .filter(a -> a.getOrder()==order).findFirst().orElseThrow(
-                       UserNotFoundException::new
-               );
+
+    public User findByOrderID(Order order) {
+        return userRepository.findAll().stream()
+                .filter(a -> a.getOrder() == order).findFirst().orElseThrow(
+                        UserNotFoundException::new
+                );
     }
 
     public User getUser(Long id) {
@@ -92,36 +94,42 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-    public List<User> getOnlyUsers(){
+
+    public List<User> getOnlyUsers() {
         return userRepository.findAll()
                 .stream().filter(o -> o.getRole().equals(Role.ROLE_USER))
                 .collect(Collectors.toList());
     }
-    public List<User> getOnlyLibrarians(){
+
+    public List<User> getOnlyLibrarians() {
         return userRepository.findAll()
                 .stream().filter(o -> o.getRole().equals(Role.ROLE_LIBRARIAN))
                 .collect(Collectors.toList());
     }
-    public List<User> getUsersExceptAdmin(){
+
+    public List<User> getUsersExceptAdmin() {
         return userRepository.findAll()
                 .stream()
                 .filter(o -> !o.getRole().equals(Role.ROLE_ADMIN))
                 .collect(Collectors.toList());
     }
-    public List<User> findUserWithOrders(){
+
+    public List<User> findUserWithOrders() {
         return userRepository.findAll().stream()
                 .filter(a -> a.getOrder() != null)
                 .collect(Collectors.toList());
     }
+
     public void delete(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         user.ifPresent(value -> userRepository.delete(value));
     }
-    public void returnBooks(User user){
+
+    public void returnBooks(User user) {
         Optional<Order> userOrder = findUserOrder(user.getEmail());
         List<Book> listBooks = new ArrayList<>();
-        if(userOrder.isPresent())
-           listBooks = userOrder.get().getBooks();
+        if (userOrder.isPresent())
+            listBooks = userOrder.get().getBooks();
         for (Book book : listBooks)
             book.setQuantity(book.getQuantity() + 1);
 

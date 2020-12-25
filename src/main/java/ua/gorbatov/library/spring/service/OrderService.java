@@ -17,20 +17,25 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
+
+    private final OrderRepository orderRepository;
+
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private UserRepository userRepository;
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     private static final Integer PENALTY = 20;
 
     public void save(Order order) {
         orderRepository.save(order);
     }
-    public Order find(Order order){
+
+    public Order find(Order order) {
         return orderRepository.getOne(order.getId());
     }
-    public void delete(Order order){
+
+    public void delete(Order order) {
         orderRepository.delete(order);
     }
 
@@ -39,13 +44,14 @@ public class OrderService {
     }
 
     public Order getOrderById(Long id) {
-            Order order = orderRepository.findById(id).orElseThrow(
-                    OrderNotFoundException::new
-            );
-            return checkPenalty(order);
+        Order order = orderRepository.findById(id).orElseThrow(
+                OrderNotFoundException::new
+        );
+        return checkPenalty(order);
     }
-    public Order getOrderByUser(User user){
-        if(user.getOrder() != null) return user.getOrder();
+
+    public Order getOrderByUser(User user) {
+        if (user.getOrder() != null) return user.getOrder();
         throw new OrderNotFoundException();
     }
 

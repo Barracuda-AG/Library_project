@@ -13,6 +13,11 @@
         <nav class="navbar navbar-expand bg-light" >
             <ul class="navbar-nav">
                 <li class="nav-item">
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="btn btn-primary">[[#{logout}]]</button>
+                    </form>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/user/cabinet">[[#{cabinet}]]</a>
                 </li>
             </ul>
@@ -53,9 +58,7 @@
 </form>
     <div th:if="${totalPages > 1}">
         <div class="row col-sm-10">
-            <div class ="col-sm-2">
-                Total rows: [[${totalItems}]]
-            </div>
+
             <div class="col-sm-1">
                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                     <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>

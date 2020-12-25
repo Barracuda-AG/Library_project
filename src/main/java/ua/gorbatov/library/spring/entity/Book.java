@@ -1,13 +1,11 @@
 package ua.gorbatov.library.spring.entity;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
+
 /**
  * The {@code Book} class used for representing books storage
  * @author Oleksandr Gorbatov
@@ -32,4 +30,7 @@ public class Book {
     private LocalDate publishDate;
 
     private Integer quantity;
+
+    @ManyToMany(mappedBy = "books")
+    private List<Order> order;
 }

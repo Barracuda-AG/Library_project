@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 /**
  * The {@code UserController} class is used for access control operations for users
  *
@@ -31,19 +32,19 @@ import java.util.stream.Collectors;
 @Controller
 public class UserController {
 
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     /**
      * The value is used to access book repository and operations
      */
-    private BookService bookService;
+    private final BookService bookService;
     /**
      * The value is used to access order repository and operations
      */
-    private OrderService orderService;
+    private final OrderService orderService;
     /**
      * The value is used to access user repository and operations
      */
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(BookService bookService, OrderService orderService, UserService userService) {
@@ -51,11 +52,12 @@ public class UserController {
         this.orderService = orderService;
         this.userService = userService;
     }
+
     /**
      * Method is used for mapping get request to cancel order
      * for current user
      *
-     * @param model used for adding attribute to get all books
+     * @param model     used for adding attribute to get all books
      * @param principal used for get current user name
      * @return String address of page
      */
@@ -71,7 +73,8 @@ public class UserController {
 
     /**
      * Method used to provide post mapping to return order
-     * @param model used to add attribute order which get current order
+     *
+     * @param model     used to add attribute order which get current order
      * @param principal to get current user name
      * @return String redirect to page makeorder
      */
@@ -85,12 +88,13 @@ public class UserController {
         userService.returnBooks(user);
         userService.clearOrder(user);
 
-        return "/user/cabinet";
+        return "redirect:/user/cabinet";
     }
 
     /**
      * Method is used for mapping get request to personal cabinet
-     * @param model used to add attribute user
+     *
+     * @param model     used to add attribute user
      * @param principal used to get current user's name
      * @return String address of page
      */
@@ -105,7 +109,8 @@ public class UserController {
 
     /**
      * Method used to provide post mapping to make order
-     * @param books used to get list fo books
+     *
+     * @param books     used to get list fo books
      * @param principal to get current name of user
      * @return redirect to page totalbooks
      */
@@ -125,13 +130,14 @@ public class UserController {
         Order order = orderService.createOrder(booksFromDb);
 
         userService.createUserOrder(user, order);
-        logger.warn("Created order :"+ order.getId());
-        return "/user/totalbooks";
+        logger.warn("Created order :" + order.getId());
+        return "redirect:/user/cabinet";
     }
 
     /**
      * Method provide get request to show order
-     * @param model to add attribute
+     *
+     * @param model     to add attribute
      * @param principal to get current user name
      * @return String path to showorder page
      */
@@ -152,10 +158,11 @@ public class UserController {
 
     /**
      * Method is used for pagination and sorting of list of books
-     * @param pageNo current page number
+     *
+     * @param pageNo    current page number
      * @param sortField present field sort
-     * @param sortDir preset sort direction
-     * @param model to add attributes
+     * @param sortDir   preset sort direction
+     * @param model     to add attributes
      * @return String address of pages
      */
     @GetMapping(value = "/page/{pageNo}")
@@ -182,6 +189,7 @@ public class UserController {
 
     /**
      * Method provide get request to show all books
+     *
      * @param model to add attributes order and selectedBooks
      * @return String paginated pages
      */
@@ -195,9 +203,10 @@ public class UserController {
         logger.info("Visited total books page");
         return findPaginated(1, "title", "asc", model);
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UserNotFoundException.class, OrderNotFoundException.class})
-    public String handleException(){
+    public String handleException() {
         return "/user/exception";
     }
 }

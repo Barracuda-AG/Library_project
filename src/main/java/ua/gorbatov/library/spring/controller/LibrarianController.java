@@ -27,19 +27,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/librarian")
 public class LibrarianController {
 
-    private static Logger logger = LoggerFactory.getLogger(LibrarianController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LibrarianController.class);
     /**
      * The value is used to access book repository and operations
      */
-    private BookService bookService;
+    private final BookService bookService;
     /**
      * The value is used to access user repository and operations
      */
-    private UserService userService;
+    private final UserService userService;
     /**
      * The value is used to access order repository and operations
      */
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @Autowired
     public LibrarianController(BookService bookService, UserService userService, OrderService orderService) {
@@ -48,6 +48,14 @@ public class LibrarianController {
         this.orderService = orderService;
     }
 
+    @GetMapping(value = "/cabinet")
+    public String cabinet(Model model, Principal principal) {
+        String userName = principal.getName();
+        User user = userService.findByName(userName);
+        model.addAttribute("user", user);
+        logger.info("Personal cabinet is visited by " + principal.getName());
+        return "/librarian/cabinet";
+    }
     /**
      * Method is used for mapping get request to show all books
      *

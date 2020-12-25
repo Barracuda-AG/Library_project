@@ -13,10 +13,15 @@
         <nav class="navbar navbar-expand bg-light" >
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/admin/success">[[#{user.all}]]</a>
+                <form action="/logout" method="POST">
+                    <button type="submit" class="btn btn-primary">[[#{logout}]]</button>
+                </form>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/delete">[[#{user.delete}]]</a>
+                <a class="nav-link" href="/admin/cabinet">[[#{cabinet}]]</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/success">[[#{user.all}]]</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/admin/allbooks">[[#{books.all}]]</a>
@@ -27,17 +32,25 @@
 </div>
 <div>
     <h2>[[#{user.edit}]]</h2>
-
-    <form th:action="@{/admin/editlibrarian}"  th:method="post">
-        <ul>
-            <li th:each="user : ${users}">
-                <div>
-                    <input type="radio" name="id" th:value="${user.getId()}">
-                    <label th:text="${user.getEmail()}"></label>
-                </div>
-            </li>
-        </ul>
-        <input name="action" id="toLibrarian" type="submit" th:value="#{to.librarian}">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">[[#{user}]]</th>
+            <th scope="col">[[#{name}]]</th>
+            <th scope="col">[[#{surname}]]</th>
+            <th scope="col">[[#{role}]]</th>
+        </tr>
+        </thead>
+        <tbody>
+        <td th:text="${user.getEmail()}"></td>
+        <td th:text="${user.getLastName()}"></td>
+        <td th:text="${user.getFirstName()}"></td>
+        <td th:text="${user.getRole()}"></td>
+        </tbody>
+    </table>
+    <form th:action="@{/admin/edituser}"  th:method="post">
+        <input type="hidden" name="id" th:value="${user.getId()}">
+       <button type="submit" class="btn btn-primary" th:text="${user.getRole() == 'ROLE_USER'} ? #{to.librarian} : #{to.user}"></button>
     </form>
 </div>
 </body>
