@@ -101,26 +101,6 @@ public class PageController {
         return "/login";
     }
 
-    /**
-     * Method provide get mapping to welcome page
-     *
-     * @return welcome page
-     */
-    @GetMapping("/welcome")
-    public String welcome() {
-        return "/welcome";
-    }
-
-    /**
-     * Method provide post mapping to welcome page
-     *
-     * @return welcome page
-     */
-    @PostMapping("/welcome")
-    public String welcomePost() {
-        return "/welcome";
-    }
-
     @GetMapping("/accessDenied")
     public String access() {
         return "/accessDenied";

@@ -20,13 +20,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="/user/cabinet">[[#{cabinet}]]</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/user/cancelorder">[[#{order.cancel}]]</a>
-            </li>
+
         </ul>
         </nav>
     </div>
 </div>
+<div class="container">
 <table class="table table-striped">
     <thead>
     <tr>
@@ -41,6 +40,8 @@
     <td th:text="${user.getFirstName()}"></td>
     </tbody>
 </table>
+</div>
+<div class="container" th:if="${order != null}">
 <table class="table table-striped">
     <thead>
     <tr>
@@ -49,7 +50,6 @@
         <th scope="col">[[#{date.issue}]]</th>
         <th scope="col">[[#{date.return}]]</th>
         <th scope="col">[[#{penalty}]]</th>
-        <th scope="col">[[#{returned}]]</th>
     </tr>
     </thead>
     <tbody>
@@ -57,22 +57,34 @@
         <td th:text="${order.getId()}"></td>
         <td th:text="${order.getIssueDate()}"></td>
         <td th:text="${order.getReturnDate()}"></td>
-        <td th:text="${order.getPenalty()}"></td>
-        <td th:text="${order.isReturned()}"></td>
+        <td th:style="${order.getPenalty() == 0} ? 'color:green': 'color:red'"  th:text="${order.getPenalty()}"></td>
+
     </tbody>
 </table>
+</div>
+<div class="container">
 <table class="table table-striped">
     <thead>
     <tr>
         <th scope="col">[[#{books}]]</th>
+        <th scope="col">[[#{author}]]</th>
+        <th scope="col">[[#{publisher}]]</th>
 
     </tr>
     </thead>
     <tbody>
     <tr th:each="book: ${books}">
         <td th:text="${book.getTitle()}"></td>
+        <td th:text="${book.getAuthor()}"></td>
+        <td th:text="${book.getPublisher()}"></td>
     </tr>
     </tbody>
 </table>
+</div>
+<div class="container" th:if="${order != null}">
+    <form th:action="@{/user/returnBook}" method="POST">
+        <button class="btn btn-primary" th:text="#{order.cancel}"></button>
+    </form>
+</div>
 </body>
 </html>

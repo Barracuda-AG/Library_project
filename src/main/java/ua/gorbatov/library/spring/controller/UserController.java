@@ -54,38 +54,16 @@ public class UserController {
     }
 
     /**
-     * Method is used for mapping get request to cancel order
-     * for current user
+     * Method used to return order
      *
-     * @param model     used for adding attribute to get all books
-     * @param principal used for get current user name
-     * @return String address of page
-     */
-    @GetMapping(value = "/user/cancelorder")
-    public String cancel(Model model, Principal principal) {
-        String userName = principal.getName();
-        User user = userService.findByName(userName);
-        Order order = user.getOrder();
-        model.addAttribute("order", order);
-        logger.info("Cancel order page is visited");
-        return "/user/cancelorder";
-    }
-
-    /**
-     * Method used to provide post mapping to return order
-     *
-     * @param model     used to add attribute order which get current order
      * @param principal to get current user name
-     * @return String redirect to page makeorder
+     * @return String redirect to page cabinet
      */
     @PostMapping(value = "/user/returnBook")
-    public String returnBook(Model model, Principal principal) {
+    public String returnBook(Principal principal) {
         String userName = principal.getName();
         User user = userService.findByName(userName);
-        Optional<Order> userOrder = userService.findUserOrder(userName);
-        model.addAttribute("order", userOrder);
 
-        userService.returnBooks(user);
         userService.clearOrder(user);
 
         return "redirect:/user/cabinet";
@@ -112,7 +90,7 @@ public class UserController {
      *
      * @param books     used to get list fo books
      * @param principal to get current name of user
-     * @return redirect to page totalbooks
+     * @return redirect to page showorder
      */
     @Transactional
     @PostMapping(value = "/user/makeorderPost")
@@ -121,7 +99,7 @@ public class UserController {
 
         String userName = principal.getName();
         User user = userService.findByName(userName);
-
+        if(user.getOrder() != null) return "redirect:/user/cabinet";
         List<Book> booksFromDb = new ArrayList<>();
         for (Book book : books) {
             booksFromDb.add(bookService.findByTitle(book.getTitle()));
@@ -131,7 +109,8 @@ public class UserController {
 
         userService.createUserOrder(user, order);
         logger.warn("Created order :" + order.getId());
-        return "redirect:/user/cabinet";
+
+        return "redirect:/user/showorder";
     }
 
     /**
@@ -146,8 +125,10 @@ public class UserController {
         String userName = principal.getName();
         User user = userService.findByName(userName);
         Order order = orderService.getOrderByUser(user);
-        List<Book> books = order.getBooks();
-
+        List<Book> books = new ArrayList<>();
+        if(order != null) {
+           books = order.getBooks();
+        }
         model.addAttribute("order", order);
         model.addAttribute("user", user);
         model.addAttribute("books", books);

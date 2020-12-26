@@ -25,18 +25,15 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    private static final Integer PENALTY = 20;
+    private static final Integer PENALTY = 50;
 
     public void save(Order order) {
         orderRepository.save(order);
     }
 
-    public Order find(Order order) {
-        return orderRepository.getOne(order.getId());
-    }
 
     public void delete(Order order) {
-        orderRepository.delete(order);
+        setOrderReturned(order);
     }
 
     public List<Order> allOrders() {
@@ -51,17 +48,23 @@ public class OrderService {
     }
 
     public Order getOrderByUser(User user) {
-        if (user.getOrder() != null) return user.getOrder();
-        throw new OrderNotFoundException();
+        return checkPenalty(user.getOrder());
     }
 
-    private Order checkPenalty(Order order) {
-        LocalDate now = LocalDate.now();
-        LocalDate returnDate = order.getReturnDate();
-        if (returnDate.isBefore(now) && !order.isReturned()) {
-            order.setPenalty(PENALTY);
+    private Order checkPenalty(Order order){
+        if(order != null) {
+            LocalDate now = LocalDate.now();
+            LocalDate returnDate = order.getReturnDate();
+            if (returnDate.isBefore(now) && !order.isReturned()) {
+                order.setPenalty(PENALTY);
+                orderRepository.save(order);
+            }
         }
         return order;
+    }
+    private void setOrderReturned(Order order){
+        order.setReturned(true);
+        orderRepository.save(order);
     }
 
     public Order createOrder(List<Book> books) {

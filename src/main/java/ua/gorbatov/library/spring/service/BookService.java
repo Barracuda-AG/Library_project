@@ -12,6 +12,7 @@ import ua.gorbatov.library.spring.exception.UnableDeleteBookException;
 import ua.gorbatov.library.spring.repository.BookRepository;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,10 @@ public class BookService {
             return true;
         }
         return false;
+    }
+
+    public Book findById(Long id){
+        return bookRepository.getOne(id);
     }
 
     public List<Book> getAll() {
@@ -65,7 +70,17 @@ public class BookService {
 
     public void updateQuantity(Book book, Integer quantity) {
         book.setQuantity(quantity);
+    }
 
+    public void updateBook(Long id, String title, String author, String publisher,
+                           LocalDate publishDate, Integer quantity){
+        Book bookToEdit = bookRepository.getOne(id);
+        bookToEdit.setTitle(title);
+        bookToEdit.setAuthor(author);
+        bookToEdit.setPublisher(publisher);
+        bookToEdit.setPublishDate(publishDate);
+        bookToEdit.setQuantity(quantity);
+        bookRepository.save(bookToEdit);
     }
 
     public Page<Book> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {

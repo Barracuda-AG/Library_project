@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Return order</title>
+    <title>Subscriptions</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
@@ -24,7 +24,7 @@
                     <a class="nav-link" href="/librarian/allbooks">[[#{books.all}]]</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/librarian/readers">[[#{readers}]]</a>
+                    <a class="nav-link" href="/librarian/allorders">[[#{subscriptions}]]</a>
                 </li>
             </ul>
         </nav>
@@ -32,39 +32,41 @@
 </div>
 
 <div class="container">
-    <h2>[[#{order.all}]]</h2>
+<form th:action="@{/librarian/returnBook}" th:method="POST">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">[[#{name}]]</th>
+            <th scope="col">[[#{surname}]]</th>
+            <th scope="col">[[#{email}]]</th>
+            <th scope="col">[[#{subscription}]]</th>
+            <th scope="col">[[#{penalty}]]</th>
+            <th scope="col">[[#{books}]]</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
 
-    <form th:action="@{/librarian/returnBook}" th:method="POST">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">[[#{subscription}]]</th>
-                <th scope="col">[[#{returned}]]</th>
-                <th scope="col">[[#{date.issue}]]</th>
-                <th scope="col">[[#{date.return}]]</th>
-                <th scope="col">[[#{penalty}]]</th>
-                <th scope="col">[[#{books}]]</th>
-            </tr>
-            </thead>
-            <tbody>
+        <tr th:each="user: ${users}">
+            <td th:text="${user.getFirstName()}"></td>
+            <td th:text="${user.getLastName()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getOrder().getId()}"></td>
+            <td th:style="${user.getOrder().getPenalty() == 0} ? 'color:green':'color:red'" th:text="${user.getOrder().getPenalty()}"></td>
+            <td><table>
+                <tr th:each="book: ${user.getOrder().getBooks()}">
+                    <td  th:text="${book.getTitle()}"></td></tr>
+            </table></td>
+            <td><form th:action="@{/librarian/returnBook}" method="POST">
+                <input type="hidden" th:value="${user.getOrder().getId()}" name="id">
+                <button type="submit" class="btn btn-danger">[[#{cancel.subscription}]]</button>
+            </form></td>
+        </tr>
 
-            <tr th:each="order: ${orders}">
-                <td th:text="${order.getId()}"></td>
-                    <td th:text="${order.isReturned() == true} ? #{yes} : #{no}"></td>
+        </tbody>
+    </table>
 
-                    <td th:text="${order.getIssueDate()}"></td>
-                    <td th:text="${order.getReturnDate()}"></td>
-                <td th:style="${order.getPenalty() == 0} ? 'color:green':'color:red'" th:text="${order.getPenalty()}"></td>
-                    <td><table>
-                        <tr th:each="book: ${order.getBooks()}">
-                        <td  th:text="${book.getTitle()}"></td></tr>
-                    </table></td>
-                </tr>
-
-            </tbody>
-        </table>
-
-    </form>
+</form>
 </div>
 </body>
 </html>

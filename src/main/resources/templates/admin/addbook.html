@@ -30,6 +30,7 @@
         </nav>
     </div>
 </div>
+<div class="container">
 <h2>[[#{book.enter}]]</h2>
 <form th:action="@{/admin/addbook}" th:object="${book}" method="post">
     <p>[[#{title}]]</p>
@@ -54,6 +55,6 @@
     <input type="submit" th:value="#{book.add}">
 </form>
 
-
+</div>
 </body>
 </html>

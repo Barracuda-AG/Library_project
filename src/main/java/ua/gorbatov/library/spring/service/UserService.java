@@ -13,6 +13,7 @@ import ua.gorbatov.library.spring.repository.OrderRepository;
 import ua.gorbatov.library.spring.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +23,14 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
+    private static final Integer PENALTY = 50;
 
     @Autowired
     public UserService(UserRepository userRepository,
-                       OrderRepository orderRepository) {
+                       OrderService orderService) {
         this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
+        this.orderService = orderService;
     }
 
     private void create(User user, Role role) {
@@ -56,7 +58,7 @@ public class UserService {
 
     public Optional<Order> findUserOrder(String name) {
         User user = userRepository.findByEmail(name).get();
-        return Optional.ofNullable(user.getOrder());
+        return Optional.ofNullable(checkPenalty(user.getOrder()));
 
 
     }
@@ -75,7 +77,8 @@ public class UserService {
 
     @Transactional
     public void clearOrder(User user) {
-        orderRepository.delete(user.getOrder());
+        returnBooks(user);
+        orderService.delete(user.getOrder());
         user.setOrder(null);
         userRepository.save(user);
     }
@@ -122,7 +125,7 @@ public class UserService {
 
     public void delete(String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        user.ifPresent(value -> userRepository.delete(value));
+        user.ifPresent(userRepository::delete);
     }
 
     public void returnBooks(User user) {
@@ -145,5 +148,14 @@ public class UserService {
         user.setLastName(userDTO.getLastName());
 
         return user;
+    }
+    private Order checkPenalty(Order order) {
+        LocalDate now = LocalDate.now();
+        LocalDate returnDate = order.getReturnDate();
+        if (returnDate.isBefore(now) && !order.isReturned()) {
+            order.setPenalty(PENALTY);
+            orderService.save(order);
+        }
+        return order;
     }
 }

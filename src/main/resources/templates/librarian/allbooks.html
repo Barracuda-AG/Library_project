@@ -23,20 +23,24 @@
             <li class="nav-item">
                 <a class="nav-link" href="/librarian/allorders">[[#{order.all}]]</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/librarian/readers">[[#{readers}]]</a>
+            </li>
         </ul>
         </nav>
     </div>
 </div>
-
-<table>
+<div class="container">
+<table class="table table-striped">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>[[#{title}]]</th>
-        <th>[[#{author}]]</th>
-        <th>[[#{publisher}]]</th>
-        <th>[[#{publish.date}]]</th>
-        <th>[[#{quantity}]]</th>
+        <th scope="col">ID</th>
+        <th scope="col">[[#{title}]]</th>
+        <th scope="col">[[#{author}]]</th>
+        <th scope="col">[[#{publisher}]]</th>
+        <th scope="col">[[#{publish.date}]]</th>
+        <th scope="col">[[#{quantity}]]</th>
+
     </tr>
     </thead>
     <tbody>
@@ -47,10 +51,11 @@
         <td th:text="${book.getPublisher()}"></td>
         <td th:text="${book.getPublishDate()}"></td>
         <td th:text="${book.getQuantity()}"></td>
-    </tr>
 
+    </tr>
 
     </tbody>
 </table>
+</div>
 </body>
 </html>

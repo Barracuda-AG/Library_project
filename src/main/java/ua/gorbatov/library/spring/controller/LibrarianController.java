@@ -56,6 +56,7 @@ public class LibrarianController {
         logger.info("Personal cabinet is visited by " + principal.getName());
         return "/librarian/cabinet";
     }
+
     /**
      * Method is used for mapping get request to show all books
      *
@@ -79,32 +80,44 @@ public class LibrarianController {
      */
     @GetMapping(value = "/allorders")
     public String cancel(Model model) {
-        List<User> usersWithOrder = userService.findUserWithOrders();
+        List<Order> orders = orderService.allOrders();
 
-        model.addAttribute("users", usersWithOrder);
+        model.addAttribute("orders", orders);
 
         logger.info("All orders page visited by librarian");
         return "/librarian/allorders";
     }
 
     /**
-     * Method used to provide post mapping to cancel order
+     * Method is used for access
+     * readers with subscriptions
      *
-     * @param id    used to get order id
-     * @param model used to add attribute orderToDelete
+     * @param model used for adding attributes users to get all orders
+     * @return String address of the page
+     */
+    @GetMapping(value = "/readers")
+    public String showReaders(Model model) {
+        List<User> usersWithOrders = userService.findUserWithOrders();
+        model.addAttribute("users", usersWithOrders);
+        return "/librarian/readers";
+    }
+
+    /**
+     * Method used to cancel subscription
+     *
+     * @param id used to get order id
      * @return String to redirect
      */
     @PostMapping(value = "/returnBook")
-    public String returnBook(@RequestParam Long id, Model model) {
+    public String returnBook(@RequestParam Long id) {
         Order order = orderService.getOrderById(id);
 
-        model.addAttribute("orderToDelete", order);
         User user = userService.findByOrderID(order);
 
         userService.clearOrder(user);
 
-        logger.info("Order is canceled");
-        return "/librarian/allbooks";
+        logger.info("Order " + order.getId() + " is canceled");
+        return "redirect:/librarian/readers";
     }
 
 }

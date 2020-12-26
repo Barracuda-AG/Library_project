@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ua.gorbatov.library</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>library</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>library</name>
     <description>Library project for Spring Boot</description>

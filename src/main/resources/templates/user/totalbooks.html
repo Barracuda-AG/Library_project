@@ -24,7 +24,8 @@
         </nav>
     </div>
 </div>
-<form th:action="@{/user/makeorderPost}" th:method="post" th:object="${order}">
+<div class="container">
+<form class="form-horizontal" th:action="@{/user/makeorderPost}" th:method="post" th:object="${order}">
 <table class="table table-striped">
     <thead>
     <tr>
@@ -54,8 +55,6 @@
     </tr>
     </tbody>
 </table>
-    <input type="submit" th:value="#{order}">
-</form>
     <div th:if="${totalPages > 1}">
         <div class="row col-sm-10">
 
@@ -75,5 +74,8 @@
             </div>
         </div>
     </div>
+    <button class="btn btn-primary" type="submit" th:text="#{order}"></button>
+</form>
+</div>
 </body>
 </html>

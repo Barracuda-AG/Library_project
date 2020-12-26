@@ -18,16 +18,19 @@
                     </form>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/librarian/allorders">[[#{order.all}]]</a>
+                    <a class="nav-link" href="/librarian/allorders">[[#{subscriptions}]]</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/librarian/allbooks">[[#{books.all}]]</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/librarian/readers">[[#{readers}]]</a>
                 </li>
             </ul>
         </nav>
     </div>
 </div>
-<h1>[[#{login.success}]]</h1>
+<div class="container">
 <h2>[[#{librarian}]]</h2>
 <table class="table table-striped">
     <thead>
@@ -47,6 +50,6 @@
 
     </tbody>
 </table>
-
+    </div>
 </body>
 </html>

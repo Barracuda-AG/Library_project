@@ -29,6 +29,7 @@
         </nav>
     </div>
 </div>
+<div class="container">
 <table class="table table-striped">
     <thead>
     <tr>
@@ -51,7 +52,7 @@
         <td th:text="${book.getPublishDate()}"></td>
         <td th:text="${book.getQuantity()}"></td>
 
-        <td><form th:action="@{/admin/editbook}" method="POST">
+        <td><form th:action="@{/admin/editpage}" method="POST">
             <input type="hidden" th:value="${book.getId()}" name="id">
             <button type="submit" class="btn btn-primary">[[#{edit}]]</button>
         </form></td>
@@ -59,11 +60,12 @@
         <td><form th:action="@{/admin/deletebook}" method="POST">
             <input type="hidden" th:value="${book.getId()}" name="id">
             <input type="hidden" th:value="${book.getTitle()}" name="title">
-            <button type="submit" class="btn btn-primary">[[#{delete}]]</button>
+            <button type="submit" class="btn btn-danger">[[#{delete}]]</button>
         </form></td>
     </tr>
 
     </tbody>
 </table>
+</div>
 </body>
 </html>

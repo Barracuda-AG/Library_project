@@ -45,14 +45,16 @@ public class AdminController {
         this.userService = userService;
         this.bookService = bookService;
     }
-    @GetMapping(value="/admin/cabinet")
-    public String cabinet(Model model, Principal principal){
+
+    @GetMapping(value = "/admin/cabinet")
+    public String cabinet(Model model, Principal principal) {
         String userName = principal.getName();
         User user = userService.findByName(userName);
         model.addAttribute("user", user);
         logger.info("Personal cabinet is visited by " + principal.getName());
         return "/admin/cabinet";
     }
+
     /**
      * Method is used for mapping get request to show succes page
      *
@@ -66,6 +68,7 @@ public class AdminController {
         model.addAttribute("userList", userList);
         return "/admin/success";
     }
+
     /**
      * Method is used for mapping get request to add book
      *
@@ -79,21 +82,23 @@ public class AdminController {
         logger.info("Adding book page visited");
         return "/admin/addbook";
     }
+
     /**
      * Method used to provide post mapping to add book
      *
-     * @param bookDTO   used to add book information
+     * @param bookDTO used to add book information
      * @return String to redirect
      */
-//    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/admin/addbook")
-    public String addNewBook(@Valid @ModelAttribute("book") BookDTO bookDTO, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) return "/admin/addbook";
+    public String addNewBook(@Valid @ModelAttribute("book") BookDTO bookDTO,
+                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "/admin/addbook";
         bookService.saveBookFromDTO(bookDTO);
 
         logger.info("Created book " + bookDTO.getTitle());
         return "redirect:/admin/allbooks";
     }
+
     /**
      * Method is used for mapping get request to show all books
      *
@@ -108,6 +113,7 @@ public class AdminController {
         logger.info("All books page is visited");
         return "/admin/allbooks";
     }
+
     /**
      * Method is used for mapping get request to edit user
      *
@@ -115,7 +121,7 @@ public class AdminController {
      * @return String address of page
      */
     @PostMapping(value = "/admin/changeRole")
-    public String editUser(@RequestParam Long id,Model model) {
+    public String editUser(@RequestParam Long id, Model model) {
 
         User user = userService.getUser(id);
         model.addAttribute("user", user);
@@ -126,7 +132,8 @@ public class AdminController {
 
     /**
      * Method is used for post request to edit user
-     * @param id used to find user
+     *
+     * @param id    used to find user
      * @param model used for adding attribute userToChange
      * @return String address of page
      */
@@ -135,10 +142,9 @@ public class AdminController {
                                    Model model) {
         User user = userService.getUser(id);
         model.addAttribute("userToChange", user);
-        if(user.getRole().equals(Role.ROLE_USER)) {
+        if (user.getRole().equals(Role.ROLE_USER)) {
             userService.update(userService.getUser(id), Role.ROLE_LIBRARIAN);
-        }
-        else if(user.getRole().equals(Role.ROLE_LIBRARIAN)){
+        } else if (user.getRole().equals(Role.ROLE_LIBRARIAN)) {
             userService.update(userService.getUser(id), Role.ROLE_USER);
         }
         logger.info("Changed role to user: " + user.getEmail());
@@ -161,41 +167,47 @@ public class AdminController {
         logger.info("Deleted user: " + email);
         return "redirect:/admin/success";
     }
-    /**
-     * Method is used for get request to delete book
-     *
-     * @param model used for adding attribute selectedBooks
-     * @return String address of page
-     */
-//    @GetMapping(value = "/admin/deletebook")
-//    public String deleteBook(Model model) {
-//        List<Book> books = bookService.getAll();
-//        model.addAttribute("selectedBooks", books);
-//
-//        logger.info("Delete book page is visited");
-//        return "/admin/deletebook";
-//    }
 
     /**
      * Method is used for post request to delete book
      *
-     * @param id used for delete book
+     * @param id    used for delete book
      * @param title used for book title
      * @return String address of page
      */
     @PostMapping(value = "/admin/deletebook")
-    public String deleteBookPost(@RequestParam(name = "id")Long id,
-                                 @RequestParam(name="title")String title) {
+    public String deleteBookPost(@RequestParam(name = "id") Long id,
+                                 @RequestParam(name = "title") String title) {
 
         bookService.delete(id);
 
         logger.info(title + " book are deleted");
         return "redirect:/admin/allbooks";
     }
+
+    @PostMapping(value = "/admin/editpage")
+    public String editBook(@RequestParam(name = "id") Long id,
+                           Model model) {
+        Book bookToEdit = bookService.findById(id);
+        model.addAttribute("book", bookToEdit);
+        return "/admin/editbook";
+    }
+
+    @PostMapping(value = "/admin/editbook")
+    public String editBookPost(@RequestParam(name = "id")Long id,
+                               @Valid @ModelAttribute(name = "book")BookDTO bookDTO,
+                               BindingResult bindingResult){
+        if(bindingResult.hasErrors()) return "redirect:/admin/editpage";
+        bookService.updateBook(id, bookDTO.getTitle(), bookDTO.getAuthor(),
+                bookDTO.getPublisher(), bookDTO.getPublishDate(), bookDTO.getQuantity());
+
+        return "redirect:/admin/allbooks";
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UserNotFoundException.class, OrderNotFoundException.class,
             UnableDeleteBookException.class})
-    public String handleException(){
+    public String handleException() {
         return "/admin/exception";
     }
 

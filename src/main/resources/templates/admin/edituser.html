@@ -30,7 +30,7 @@
         </nav>
     </div>
 </div>
-<div>
+<div class="container">
     <h2>[[#{user.edit}]]</h2>
     <table class="table table-striped">
         <thead>
@@ -50,7 +50,7 @@
     </table>
     <form th:action="@{/admin/edituser}"  th:method="post">
         <input type="hidden" name="id" th:value="${user.getId()}">
-       <button type="submit" class="btn btn-primary" th:text="${user.getRole() == 'ROLE_USER'} ? #{to.librarian} : #{to.user}"></button>
+       <button type="submit" class="btn btn-primary" th:text="${user.getRole().toString() == 'ROLE_USER'} ? #{to.librarian} : #{to.user}"></button>
     </form>
 </div>
 </body>
