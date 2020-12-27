@@ -52,6 +52,11 @@
         <input type="hidden" name="id" th:value="${user.getId()}">
        <button type="submit" class="btn btn-primary" th:text="${user.getRole().toString() == 'ROLE_USER'} ? #{to.librarian} : #{to.user}"></button>
     </form>
+    <br/>
+    <form th:action="@{/admin/lock}"  th:method="post">
+        <input type="hidden" name="id" th:value="${user.getId()}">
+        <button type="submit" class="btn btn-warning" th:text="${user.isAccountNonLocked() == true} ? #{lock} : #{unlock}"></button>
+    </form>
 </div>
 </body>
 </html>

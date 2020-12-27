@@ -5,11 +5,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.gorbatov.library.spring.dto.BookDTO;
+import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.entity.User;
 import ua.gorbatov.library.spring.service.BookService;
+import ua.gorbatov.library.spring.service.OrderService;
 import ua.gorbatov.library.spring.service.UserService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Component
 public class OnStartRunner {//implements CommandLineRunner {
@@ -17,10 +21,12 @@ public class OnStartRunner {//implements CommandLineRunner {
     private UserService userService;
 
     private BookService bookService;
+
     @Autowired
     public OnStartRunner(UserService userService, BookService bookService) {
         this.userService = userService;
         this.bookService = bookService;
+
     }
 
 
@@ -30,23 +36,28 @@ public class OnStartRunner {//implements CommandLineRunner {
                 .email("admin@mail.com")
                 .firstName("admin")
                 .lastName("admin")
+                .accountNonLocked(true)
                 .build();
         userService.createAdmin(admin);
 
         User librarian = User.builder()
-                .password(bCryptPasswordEncoder().encode("gorbatov"))
-                .email("gorbatov2010@yahoo.com")
+                .password(bCryptPasswordEncoder().encode("librarian"))
+                .email("librarian@mail.com")
                 .firstName("alex")
                 .lastName("gorbatov")
+                .accountNonLocked(true)
                 .build();
         userService.createLibrarian(librarian);
+
         User user = User.builder()
                 .password(bCryptPasswordEncoder().encode("user"))
                 .email("user@mail.com")
                 .firstName("user")
                 .lastName("user")
+                .accountNonLocked(true)
                 .build();
         userService.createUser(user);
+
         BookDTO bookDTO1 = new BookDTO();
         bookDTO1.setTitle("Truly, madly, guilty");
         bookDTO1.setAuthor("Liane Moriarty");
@@ -126,6 +137,7 @@ public class OnStartRunner {//implements CommandLineRunner {
         bookDTO10.setPublisher("Penguin");
         bookDTO10.setQuantity(20);
         bookService.saveBookFromDTO(bookDTO10);
+
 
     }
     BCryptPasswordEncoder bCryptPasswordEncoder(){

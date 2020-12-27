@@ -41,6 +41,8 @@ public class User implements UserDetails {
 
     private String lastName;
 
+    private boolean accountNonLocked;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>(Collections.singleton(role));
@@ -56,10 +58,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
 
     @Override
     public boolean isCredentialsNonExpired() {

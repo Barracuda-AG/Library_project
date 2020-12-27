@@ -30,7 +30,8 @@
     </div>
 </div>
 <div class="container">
-<table class="table table-striped">
+    <h3>[[#{books.all}]]</h3>
+<table border="1" class="table table-striped">
     <thead>
     <tr>
         <th scope="col">ID</th>
@@ -44,7 +45,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="book: ${books}">
+    <tr th:each="book: ${bookList}">
         <td th:text="${book.getId()}"></td>
         <td th:text="${book.getTitle()}"></td>
         <td th:text="${book.getAuthor()}"></td>
@@ -66,6 +67,25 @@
 
     </tbody>
 </table>
+    <div th:if="${totalPages > 1}">
+        <div class="row col-sm-10">
+
+            <div class="col-sm-1">
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${currentPage != i}" th:href="@{'/admin/page_book/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                    <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;
+                </span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/page_book/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/page_book/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

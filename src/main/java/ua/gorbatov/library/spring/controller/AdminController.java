@@ -1,6 +1,8 @@
 package ua.gorbatov.library.spring.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
+import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.exception.OrderNotFoundException;
 import ua.gorbatov.library.spring.exception.UnableDeleteBookException;
 import ua.gorbatov.library.spring.exception.UserNotFoundException;
@@ -40,6 +42,13 @@ public class AdminController {
      */
     private final BookService bookService;
 
+    private static final int NUMBERS_ON_PAGE = 6;
+    private static final int FIRST_PAGE = 1;
+    public static final String ROLE = "role";
+    public static final String ID = "id";
+    private static final String ASC = "asc";
+    private static final String DESC = "desc";
+
     @Autowired
     public AdminController(UserService userService, BookService bookService) {
         this.userService = userService;
@@ -64,9 +73,8 @@ public class AdminController {
     @GetMapping(value = "/admin/success")
     public String success(Model model) {
         logger.info("admin page visited");
-        List<User> userList = userService.getAllUsers();
-        model.addAttribute("userList", userList);
-        return "/admin/success";
+
+        return findPaginatedUsers(FIRST_PAGE, ROLE, ASC,  model);
     }
 
     /**
@@ -107,11 +115,9 @@ public class AdminController {
      */
     @GetMapping(value = "/admin/allbooks")
     public String allBooks(Model model) {
-        List<Book> books = bookService.getAll();
-        model.addAttribute("books", books);
 
         logger.info("All books page is visited");
-        return "/admin/allbooks";
+        return findPaginatedBooks(FIRST_PAGE, ID, ASC, model);
     }
 
     /**
@@ -202,6 +208,59 @@ public class AdminController {
                 bookDTO.getPublisher(), bookDTO.getPublishDate(), bookDTO.getQuantity());
 
         return "redirect:/admin/allbooks";
+    }
+
+    @GetMapping(value = "/admin/page_user/{pageNo}")
+    public String findPaginatedUsers(@PathVariable(value = "pageNo")int pageNo,
+                                     @RequestParam("sortField") String sortField,
+                                     @RequestParam("sortDir") String sortDir,
+                                     Model model) {
+        Page<User> page = userService.findPaginated(pageNo, NUMBERS_ON_PAGE, sortField, sortDir);
+        List<User> userList = page.getContent();
+
+        model.addAttribute("userList", userList);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals(ASC) ? DESC : ASC);
+
+        return "/admin/success";
+    }
+
+    @GetMapping(value = "/admin/page_book/{pageNo}")
+    public String findPaginatedBooks(@PathVariable(value = "pageNo") int pageNo,
+                                     @RequestParam("sortField") String sortField,
+                                     @RequestParam("sortDir") String sortDir,
+                                     Model model) {
+
+        Page<Book> page = bookService.findPaginated(pageNo, NUMBERS_ON_PAGE, sortField, sortDir);
+        List<Book> bookList = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("bookList", bookList);
+
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals(ASC) ? DESC : ASC);
+
+        return "/admin/allbooks";
+    }
+
+    @PostMapping(value = "/admin/lock")
+    public String lockUser(@RequestParam(name = "id")Long id){
+        User user = userService.getUser(id);
+        if(user.isAccountNonLocked()){
+            userService.blockUser(id);
+        }
+        else {
+            userService.unblockUser(id);
+        }
+        return "redirect:/admin/success";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -36,23 +36,23 @@
     <p>[[#{title}]]</p>
     <input type="text" name="title" th:field="*{title}"/>
     <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Name error</div> <br/>
-    <br/>
+
     <p>[[#{author}]]</p>
     <input type="text" name="author"  th:field="*{author}"/>
     <div class="alert alert-danger" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Name error</div><br/>
-    <br/>
+
     <p>[[#{publisher}]]</p>
     <input type="text" name="publisher"  th:field="*{publisher}"/>
     <div class="alert alert-danger" th:if="${#fields.hasErrors('publisher')}" th:errors="*{publisher}">Name error</div><br/>
-    <br/>
+
     <p>[[#{publish.date}]]</p>
     <input type="date"  name="publishDate">
-    <br/>
+
     <p>[[#{quantity}]]</p>
     <input type="number" name="quantity"  th:field="*{quantity}">
     <div class="alert alert-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Name error</div>
     <br/>
-    <input type="submit" th:value="#{book.add}">
+    <button type="submit" class="btn btn-primary" th:text="#{book.add}"></button>
 </form>
 
 </div>

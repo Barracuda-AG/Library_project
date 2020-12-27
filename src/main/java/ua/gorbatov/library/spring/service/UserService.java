@@ -1,5 +1,6 @@
 package ua.gorbatov.library.spring.service;
 
+import org.springframework.data.domain.*;
 import ua.gorbatov.library.spring.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -122,9 +123,20 @@ public class UserService {
                 .filter(a -> a.getOrder() != null)
                 .collect(Collectors.toList());
     }
+    public void blockUser(Long id){
+        User user = userRepository.getOne(id);
+        user.setAccountNonLocked(false);
+        userRepository.save(user);
+    }
 
+    public void unblockUser(Long id){
+        User user = userRepository.getOne(id);
+        user.setAccountNonLocked(true);
+        userRepository.save(user);
+    }
     public void delete(String email) {
         Optional<User> user = userRepository.findByEmail(email);
+        returnBooks(user.get());
         user.ifPresent(userRepository::delete);
     }
 
@@ -146,6 +158,7 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
+        user.setAccountNonLocked(true);
 
         return user;
     }
@@ -157,5 +170,13 @@ public class UserService {
             orderService.save(order);
         }
         return order;
+    }
+
+    public Page<User> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection){
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name())? Sort.by(sortField).ascending()
+                : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        List<User> list = getUsersExceptAdmin();
+        return new PageImpl<>(list, pageable, list.size());
     }
 }

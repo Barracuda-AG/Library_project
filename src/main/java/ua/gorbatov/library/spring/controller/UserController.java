@@ -185,6 +185,13 @@ public class UserController {
         return findPaginated(1, "title", "asc", model);
     }
 
+    @PostMapping(value = "/user/search")
+    public String search(@RequestParam(name = "text")String text, Model model){
+        List<Book> bookList = bookService.findByAuthorOrTitle(text);
+        model.addAttribute("bookList", bookList);
+        return "/user/result";
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UserNotFoundException.class, OrderNotFoundException.class})
     public String handleException() {

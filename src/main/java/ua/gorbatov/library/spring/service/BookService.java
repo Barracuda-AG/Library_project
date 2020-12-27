@@ -47,6 +47,12 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public List<Book> findByAuthorOrTitle(String text){
+        return bookRepository.findAll().stream()
+                .filter(o -> o.getTitle().contains(text) || o.getAuthor().contains(text))
+                .collect(Collectors.toList());
+    }
+
     public void delete(Long id) {
             try {
                 bookRepository.deleteById(id);
