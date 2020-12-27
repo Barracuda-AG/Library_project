@@ -35,22 +35,28 @@
     <h2>[[#{order.all}]]</h2>
 
     <form th:action="@{/librarian/returnBook}" th:method="POST">
-        <table class="table table-striped">
+        <table border="1" class="table table-striped">
             <thead>
             <tr>
-                <th scope="col">[[#{subscription}]]</th>
-                <th scope="col">[[#{returned}]]</th>
-                <th scope="col">[[#{date.issue}]]</th>
-                <th scope="col">[[#{date.return}]]</th>
-                <th scope="col">[[#{penalty}]]</th>
+                <th scope="col"><a th:href="@{'/librarian/page_order/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}">
+                    [[#{subscription}]]</a></th>
+                <th scope="col">
+                    <a th:href="@{'/librarian/page_order/' + ${currentPage} + '?sortField=isReturned&sortDir=' + ${reverseSortDir}}">
+                        [[#{returned}]]</a></th>
+                <th scope="col"><a th:href="@{'/librarian/page_order/' + ${currentPage} + '?sortField=issueDate&sortDir=' + ${reverseSortDir}}">
+                    [[#{date.issue}]]</a></th>
+                <th scope="col"><a th:href="@{'/librarian/page_order/' + ${currentPage} + '?sortField=returnDate&sortDir=' + ${reverseSortDir}}">
+                    [[#{date.return}]]</a></th>
+                <th scope="col"><a th:href="@{'/librarian/page_order/' + ${currentPage} + '?sortField=penalty&sortDir=' + ${reverseSortDir}}">
+                    [[#{penalty}]]</a></th>
                 <th scope="col">[[#{books}]]</th>
             </tr>
             </thead>
             <tbody>
 
-            <tr th:each="order: ${orders}">
+            <tr th:each="order: ${orderList}">
                 <td th:text="${order.getId()}"></td>
-                    <td th:text="${order.isReturned() == true} ? #{yes} : #{no}"></td>
+                    <td th:style="${order.isReturned() == true} ? 'color:green':'color:red'" th:text="${order.isReturned() == true} ? #{yes} : #{no}"></td>
 
                     <td th:text="${order.getIssueDate()}"></td>
                     <td th:text="${order.getReturnDate()}"></td>
@@ -63,7 +69,28 @@
 
             </tbody>
         </table>
+        <div th:if="${totalPages > 1}">
+            <div class="row col-sm-10">
 
+                <div class="col-sm-1">
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${currentPage != i}" th:href="@{'/librarian/page_order/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                    <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;
+                </span>
+                </div>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage > 1}" th:href="@{'/librarian/page_order/' + ${1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">First</a>
+                </div>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}" th:href="@{'/librarian/page_order/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                    <span th:unless="${currentPage < totalPages}">Next</span>
+                </div>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}" th:href="@{'/librarian/page_order/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                    <span th:unless="${currentPage < totalPages}">Last</span>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 </body>

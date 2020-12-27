@@ -154,7 +154,9 @@ public class UserController {
         int pageSize = 8;
 
         Page<Book> page = bookService.findPaginated(pageNo, pageSize, sortField, sortDir);
-        List<Book> bookList = page.getContent();
+        List<Book> bookList = page.getContent().stream()
+                .filter(o -> o.getQuantity() > 0)
+                .collect(Collectors.toList());
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -176,11 +178,9 @@ public class UserController {
      */
     @GetMapping(value = "/user/totalbooks")
     public String viewBooks(Model model) {
-        List<Book> books = bookService.getAll().stream()
-                .filter(o -> o.getQuantity() > 0)
-                .collect(Collectors.toList());
+
         model.addAttribute("order", new Order());
-        model.addAttribute("selectedBooks", books);
+
         logger.info("Visited total books page");
         return findPaginated(1, "title", "asc", model);
     }

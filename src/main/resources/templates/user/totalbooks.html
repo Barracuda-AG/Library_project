@@ -29,7 +29,6 @@
 <table class="table table-striped">
     <thead>
     <tr>
-        <th scope="col">ID</th>
         <th scope="col">
             <a th:href="@{'/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">
                 [[#{title}]]</a></th>
@@ -40,12 +39,11 @@
         <th scope="col"><a th:href="@{'/page/' + ${currentPage} + '?sortField=publishDate&sortDir=' + ${reverseSortDir}}">
             [[#{publish.date}]]</a></th>
         <th scope="col">[[#{quantity}]]</th>
-        <th scope="col">[[#{order.make}]]</th>
+        <th scope="col">[[#{order}]]</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="book: ${bookList}">
-        <td th:text="${book.getId()}"></td>
         <td th:text="${book.getTitle()}"></td>
         <td th:text="${book.getAuthor()}"></td>
         <td th:text="${book.getPublisher()}"></td>

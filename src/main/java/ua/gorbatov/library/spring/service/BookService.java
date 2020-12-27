@@ -44,9 +44,7 @@ public class BookService {
     }
 
     public List<Book> getAll() {
-        return bookRepository.findAll().stream()
-                .filter(o -> o.getQuantity() > 0)
-                .collect(Collectors.toList());
+        return bookRepository.findAll();
     }
 
     public void delete(Long id) {

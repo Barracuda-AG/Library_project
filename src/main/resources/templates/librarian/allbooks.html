@@ -31,20 +31,28 @@
     </div>
 </div>
 <div class="container">
-<table class="table table-striped">
+    <h3>[[#{books.all}]]</h3>
+<table border="1" class="table table-striped">
     <thead>
     <tr>
         <th scope="col">ID</th>
-        <th scope="col">[[#{title}]]</th>
-        <th scope="col">[[#{author}]]</th>
-        <th scope="col">[[#{publisher}]]</th>
-        <th scope="col">[[#{publish.date}]]</th>
-        <th scope="col">[[#{quantity}]]</th>
+        <th scope="col">
+            <a th:href="@{'/librarian/page/' + ${currentPage} + '?sortField=title&sortDir=' + ${reverseSortDir}}">
+                [[#{title}]]</a></th>
+        <th scope="col"><a th:href="@{'/librarian/page/' + ${currentPage} + '?sortField=author&sortDir=' + ${reverseSortDir}}">
+            [[#{author}]]</a></th>
+        <th scope="col"><a th:href="@{'/librarian/page/' + ${currentPage} + '?sortField=publisher&sortDir=' + ${reverseSortDir}}">
+            [[#{publisher}]]</a></th>
+        <th scope="col"><a th:href="@{'/librarian/page/' + ${currentPage} + '?sortField=publishDate&sortDir=' + ${reverseSortDir}}">
+            [[#{publish.date}]]</a></th>
+        <th scope="col">
+            <a th:href="@{'/librarian/page/' + ${currentPage} + '?sortField=quantity&sortDir=' + ${reverseSortDir}}">
+                [[#{quantity}]]</a></th>
 
     </tr>
     </thead>
     <tbody>
-    <tr th:each="book: ${books}">
+    <tr th:each="book: ${bookList}">
         <td th:text="${book.getId()}"></td>
         <td th:text="${book.getTitle()}"></td>
         <td th:text="${book.getAuthor()}"></td>
@@ -56,6 +64,25 @@
 
     </tbody>
 </table>
+    <div th:if="${totalPages > 1}">
+        <div class="row col-sm-10">
+
+            <div class="col-sm-1">
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${currentPage != i}" th:href="@{'/librarian/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                    <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;
+                </span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/librarian/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/librarian/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
