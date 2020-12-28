@@ -74,6 +74,14 @@ public class OnStartRunner {//implements CommandLineRunner {
         bookDTO2.setQuantity(12);
         bookService.saveBookFromDTO(bookDTO2);
 
+        BookDTO bookDTO12 = new BookDTO();
+        bookDTO12.setTitle("Гаррі Поттер i Таємна кімната");
+        bookDTO12.setAuthor("Джоан Роулінг");
+        bookDTO12.setPublishDate(LocalDate.of(1997, 5, 11));
+        bookDTO12.setPublisher("Київ");
+        bookDTO12.setQuantity(10);
+        bookService.saveBookFromDTO(bookDTO12);
+
         BookDTO bookDTO3 = new BookDTO();
         bookDTO3.setTitle("1984");
         bookDTO3.setAuthor("George Orwell");
@@ -137,6 +145,14 @@ public class OnStartRunner {//implements CommandLineRunner {
         bookDTO10.setPublisher("Penguin");
         bookDTO10.setQuantity(20);
         bookService.saveBookFromDTO(bookDTO10);
+
+        BookDTO bookDTO11 = new BookDTO();
+        bookDTO11.setTitle("Чужак");
+        bookDTO11.setAuthor("Макс Фрай");
+        bookDTO11.setPublishDate(LocalDate.of(1998, 5, 11));
+        bookDTO11.setPublisher("Амфора");
+        bookDTO11.setQuantity(15);
+        bookService.saveBookFromDTO(bookDTO11);
 
 
     }
