@@ -11,12 +11,10 @@ import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.entity.User;
 import ua.gorbatov.library.spring.exception.OrderNotFoundException;
 import ua.gorbatov.library.spring.repository.OrderRepository;
-import ua.gorbatov.library.spring.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -55,8 +53,8 @@ public class OrderService {
         return checkPenalty(user.getOrder());
     }
 
-    private Order checkPenalty(Order order){
-        if(order != null) {
+    private Order checkPenalty(Order order) {
+        if (order != null) {
             LocalDate now = LocalDate.now();
             LocalDate returnDate = order.getReturnDate();
             if (returnDate.isBefore(now) && !order.isReturned()) {
@@ -66,7 +64,8 @@ public class OrderService {
         }
         return order;
     }
-    private void setOrderReturned(Order order){
+
+    private void setOrderReturned(Order order) {
         order.setReturned(true);
         orderRepository.save(order);
     }
@@ -81,7 +80,7 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Page<Order> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection){
+    public Page<Order> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);

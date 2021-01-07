@@ -1,10 +1,12 @@
 package ua.gorbatov.library.spring.exception;
 
 public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(){
+
+    public UserNotFoundException() {
         super();
     }
-    public UserNotFoundException(String message){
+
+    public UserNotFoundException(String message) {
         super(message);
     }
 }

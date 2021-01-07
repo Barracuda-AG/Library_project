@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.gorbatov.library.spring.constants.Constants;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.entity.User;
@@ -14,10 +15,8 @@ import ua.gorbatov.library.spring.service.BookService;
 import ua.gorbatov.library.spring.service.OrderService;
 import ua.gorbatov.library.spring.service.UserService;
 
-import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The {@code LibrarianController} class is used for access control operations for librarian
@@ -41,13 +40,6 @@ public class LibrarianController {
      * The value is used to access order repository and operations
      */
     private final OrderService orderService;
-
-    private static final int NUMBERS_ON_PAGE = 6;
-    private static final int FIRST_PAGE = 1;
-    public static final String ID = "id";
-    private static final String ASC = "asc";
-    private static final String DESC = "desc";
-
 
     @Autowired
     public LibrarianController(BookService bookService, UserService userService, OrderService orderService) {
@@ -73,9 +65,9 @@ public class LibrarianController {
      */
     @GetMapping(value = "/allorders")
     public String cancel(Model model) {
-        
+
         logger.info("All orders page visited by librarian");
-        return findPaginatedOrders(FIRST_PAGE, ID, DESC, model);
+        return findPaginatedOrders(Constants.FIRST_PAGE, Constants.ID, Constants.DESC, model);
     }
 
     /**
@@ -120,7 +112,7 @@ public class LibrarianController {
     public String allBooks(Model model) {
 
         logger.info("All books page visited by librarian");
-        return findPaginatedBooks(FIRST_PAGE, ID, ASC, model);
+        return findPaginatedBooks(Constants.FIRST_PAGE, Constants.ID, Constants.ASC, model);
     }
 
     /**
@@ -134,11 +126,11 @@ public class LibrarianController {
      */
     @GetMapping(value = "/page/{pageNo}")
     public String findPaginatedBooks(@PathVariable(value = "pageNo") int pageNo,
-                                @RequestParam("sortField") String sortField,
-                                @RequestParam("sortDir") String sortDir,
-                                Model model) {
+                                     @RequestParam("sortField") String sortField,
+                                     @RequestParam("sortDir") String sortDir,
+                                     Model model) {
 
-        Page<Book> page = bookService.findPaginated(pageNo, NUMBERS_ON_PAGE, sortField, sortDir);
+        Page<Book> page = bookService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE, sortField, sortDir);
         List<Book> bookList = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
@@ -148,27 +140,27 @@ public class LibrarianController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals(ASC) ? DESC : ASC);
+        model.addAttribute("reverseSortDir", sortDir.equals(Constants.ASC) ? Constants.DESC : Constants.ASC);
 
         return "/librarian/allbooks";
     }
 
     @GetMapping(value = "/page_order/{pageNo}")
-    public String findPaginatedOrders(@PathVariable(value = "pageNo")int pageNo,
+    public String findPaginatedOrders(@PathVariable(value = "pageNo") int pageNo,
                                       @RequestParam("sortField") String sortField,
                                       @RequestParam("sortDir") String sortDir,
-                                      Model model){
-        Page<Order> page = orderService.findPaginated(pageNo, NUMBERS_ON_PAGE, sortField, sortDir);
+                                      Model model) {
+        Page<Order> page = orderService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE, sortField, sortDir);
         List<Order> orderList = page.getContent();
 
         model.addAttribute("orderList", orderList);
-        model.addAttribute("currentPage",pageNo);
+        model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals(ASC) ? DESC : ASC);
+        model.addAttribute("reverseSortDir", sortDir.equals(Constants.ASC) ? Constants.DESC : Constants.ASC);
 
         return "/librarian/allorders";
     }

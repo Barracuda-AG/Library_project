@@ -1,22 +1,22 @@
 package ua.gorbatov.library.spring.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.validation.BindingResult;
-import ua.gorbatov.library.spring.entity.Order;
-import ua.gorbatov.library.spring.exception.OrderNotFoundException;
-import ua.gorbatov.library.spring.exception.UnableDeleteBookException;
-import ua.gorbatov.library.spring.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ua.gorbatov.library.spring.constants.Constants;
 import ua.gorbatov.library.spring.dto.BookDTO;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.entity.Role;
 import ua.gorbatov.library.spring.entity.User;
+import ua.gorbatov.library.spring.exception.OrderNotFoundException;
+import ua.gorbatov.library.spring.exception.UnableDeleteBookException;
+import ua.gorbatov.library.spring.exception.UserNotFoundException;
 import ua.gorbatov.library.spring.service.BookService;
 import ua.gorbatov.library.spring.service.UserService;
 
@@ -42,12 +42,6 @@ public class AdminController {
      */
     private final BookService bookService;
 
-    private static final int NUMBERS_ON_PAGE = 6;
-    private static final int FIRST_PAGE = 1;
-    public static final String ROLE = "role";
-    public static final String ID = "id";
-    private static final String ASC = "asc";
-    private static final String DESC = "desc";
 
     @Autowired
     public AdminController(UserService userService, BookService bookService) {
@@ -74,7 +68,7 @@ public class AdminController {
     public String success(Model model) {
         logger.info("admin page visited");
 
-        return findPaginatedUsers(FIRST_PAGE, ROLE, ASC,  model);
+        return findPaginatedUsers(Constants.FIRST_PAGE, Constants.ROLE, Constants.ASC, model);
     }
 
     /**
@@ -117,7 +111,7 @@ public class AdminController {
     public String allBooks(Model model) {
 
         logger.info("All books page is visited");
-        return findPaginatedBooks(FIRST_PAGE, ID, ASC, model);
+        return findPaginatedBooks(Constants.FIRST_PAGE, Constants.ID, Constants.ASC, model);
     }
 
     /**
@@ -200,10 +194,10 @@ public class AdminController {
     }
 
     @PostMapping(value = "/admin/editbook")
-    public String editBookPost(@RequestParam(name = "id")Long id,
-                               @Valid @ModelAttribute(name = "book")BookDTO bookDTO,
-                               BindingResult bindingResult){
-        if(bindingResult.hasErrors()) return "redirect:/admin/editpage";
+    public String editBookPost(@RequestParam(name = "id") Long id,
+                               @Valid @ModelAttribute(name = "book") BookDTO bookDTO,
+                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "redirect:/admin/editpage";
         bookService.updateBook(id, bookDTO.getTitle(), bookDTO.getAuthor(),
                 bookDTO.getPublisher(), bookDTO.getPublishDate(), bookDTO.getQuantity());
 
@@ -211,11 +205,11 @@ public class AdminController {
     }
 
     @GetMapping(value = "/admin/page_user/{pageNo}")
-    public String findPaginatedUsers(@PathVariable(value = "pageNo")int pageNo,
+    public String findPaginatedUsers(@PathVariable(value = "pageNo") int pageNo,
                                      @RequestParam("sortField") String sortField,
                                      @RequestParam("sortDir") String sortDir,
                                      Model model) {
-        Page<User> page = userService.findPaginated(pageNo, NUMBERS_ON_PAGE, sortField, sortDir);
+        Page<User> page = userService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE, sortField, sortDir);
         List<User> userList = page.getContent();
 
         model.addAttribute("userList", userList);
@@ -225,7 +219,7 @@ public class AdminController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals(ASC) ? DESC : ASC);
+        model.addAttribute("reverseSortDir", sortDir.equals(Constants.ASC) ? Constants.DESC : Constants.ASC);
 
         return "/admin/success";
     }
@@ -236,7 +230,7 @@ public class AdminController {
                                      @RequestParam("sortDir") String sortDir,
                                      Model model) {
 
-        Page<Book> page = bookService.findPaginated(pageNo, NUMBERS_ON_PAGE, sortField, sortDir);
+        Page<Book> page = bookService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE, sortField, sortDir);
         List<Book> bookList = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
@@ -246,18 +240,17 @@ public class AdminController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals(ASC) ? DESC : ASC);
+        model.addAttribute("reverseSortDir", sortDir.equals(Constants.ASC) ? Constants.DESC : Constants.ASC);
 
         return "/admin/allbooks";
     }
 
     @PostMapping(value = "/admin/lock")
-    public String lockUser(@RequestParam(name = "id")Long id){
+    public String lockUser(@RequestParam(name = "id") Long id) {
         User user = userService.getUser(id);
-        if(user.isAccountNonLocked()){
+        if (user.isAccountNonLocked()) {
             userService.blockUser(id);
-        }
-        else {
+        } else {
             userService.unblockUser(id);
         }
         return "redirect:/admin/success";

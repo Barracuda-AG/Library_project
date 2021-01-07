@@ -6,8 +6,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+
 /**
  * The {@code Order} class used for storage user's order
+ *
  * @author Oleksandr Gorbatov
  */
 @Getter
@@ -16,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="orders")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

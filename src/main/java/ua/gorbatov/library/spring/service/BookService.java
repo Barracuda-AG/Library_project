@@ -11,7 +11,6 @@ import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.exception.UnableDeleteBookException;
 import ua.gorbatov.library.spring.repository.BookRepository;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,16 +29,11 @@ public class BookService {
         return bookRepository.findByTitle(title);
     }
 
-    public boolean save(Book book) {
-        Book bookToSave = bookRepository.findByTitle(book.getTitle());
-        if (bookToSave == null) {
-            bookRepository.save(book);
-            return true;
-        }
-        return false;
+    public void save(Book book) {
+        bookRepository.save(book);
     }
 
-    public Book findById(Long id){
+    public Book findById(Long id) {
         return bookRepository.getOne(id);
     }
 
@@ -47,18 +41,18 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public List<Book> findByAuthorOrTitle(String text){
+    public List<Book> findByAuthorOrTitle(String text) {
         return bookRepository.findAll().stream()
                 .filter(o -> o.getTitle().contains(text) || o.getAuthor().contains(text))
                 .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
-            try {
-                bookRepository.deleteById(id);
-            }catch (Exception e){
-                throw new UnableDeleteBookException(e.getMessage());
-            }
+        try {
+            bookRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new UnableDeleteBookException(e.getMessage());
+        }
     }
 
     public Book saveBookFromDTO(BookDTO bookDTO) {
@@ -77,7 +71,7 @@ public class BookService {
     }
 
     public void updateBook(Long id, String title, String author, String publisher,
-                           LocalDate publishDate, Integer quantity){
+                           LocalDate publishDate, Integer quantity) {
         Book bookToEdit = bookRepository.getOne(id);
         bookToEdit.setTitle(title);
         bookToEdit.setAuthor(author);

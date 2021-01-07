@@ -1,6 +1,6 @@
 package ua.gorbatov.library.spring.exception;
 
-public class UnableDeleteBookException extends RuntimeException{
+public class UnableDeleteBookException extends RuntimeException {
 
     public UnableDeleteBookException() {
     }

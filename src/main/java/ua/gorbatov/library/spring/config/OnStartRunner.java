@@ -156,7 +156,8 @@ public class OnStartRunner {//implements CommandLineRunner {
 
 
     }
-    BCryptPasswordEncoder bCryptPasswordEncoder(){
+
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

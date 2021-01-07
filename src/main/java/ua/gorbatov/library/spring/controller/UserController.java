@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.gorbatov.library.spring.constants.Constants;
 import ua.gorbatov.library.spring.entity.Book;
 import ua.gorbatov.library.spring.entity.Order;
 import ua.gorbatov.library.spring.entity.User;
@@ -21,7 +22,6 @@ import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -99,11 +99,11 @@ public class UserController {
 
         String userName = principal.getName();
         User user = userService.findByName(userName);
-        if(user.getOrder() != null) return "redirect:/user/cabinet";
+        if (user.getOrder() != null) return "redirect:/user/cabinet";
         List<Book> booksFromDb = new ArrayList<>();
         for (Book book : books) {
             booksFromDb.add(bookService.findByTitle(book.getTitle()));
-            bookService.updateQuantity(book, book.getQuantity() - 1);
+            bookService.updateQuantity(book, book.getQuantity() - Constants.ONE);
         }
         Order order = orderService.createOrder(booksFromDb);
 
@@ -126,8 +126,8 @@ public class UserController {
         User user = userService.findByName(userName);
         Order order = orderService.getOrderByUser(user);
         List<Book> books = new ArrayList<>();
-        if(order != null) {
-           books = order.getBooks();
+        if (order != null) {
+            books = order.getBooks();
         }
         model.addAttribute("order", order);
         model.addAttribute("user", user);
@@ -151,9 +151,8 @@ public class UserController {
                                 @RequestParam("sortField") String sortField,
                                 @RequestParam("sortDir") String sortDir,
                                 Model model) {
-        int pageSize = 8;
 
-        Page<Book> page = bookService.findPaginated(pageNo, pageSize, sortField, sortDir);
+        Page<Book> page = bookService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE_EIGHT, sortField, sortDir);
         List<Book> bookList = page.getContent().stream()
                 .filter(o -> o.getQuantity() > 0)
                 .collect(Collectors.toList());
@@ -165,7 +164,7 @@ public class UserController {
 
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
-        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("reverseSortDir", sortDir.equals(Constants.ASC) ? Constants.DESC : Constants.ASC);
 
         return "/user/totalbooks";
     }
@@ -182,11 +181,11 @@ public class UserController {
         model.addAttribute("order", new Order());
 
         logger.info("Visited total books page");
-        return findPaginated(1, "title", "asc", model);
+        return findPaginated(Constants.FIRST_PAGE, Constants.TITLE, Constants.ASC, model);
     }
 
     @PostMapping(value = "/user/search")
-    public String search(@RequestParam(name = "text")String text, Model model){
+    public String search(@RequestParam(name = "text") String text, Model model) {
         List<Book> bookList = bookService.findByAuthorOrTitle(text);
         model.addAttribute("bookList", bookList);
         return "/user/result";

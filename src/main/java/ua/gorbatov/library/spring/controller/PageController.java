@@ -54,20 +54,19 @@ public class PageController {
      *
      * @return welcome page
      */
-//    @ResponseStatus(value = HttpStatus.OK)
     @PostMapping("/login")
     public String getLogin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         User user = userService.findByName(email);
 
-        if(user.getRole().equals(Role.ROLE_USER)){
+        if (user.getRole().equals(Role.ROLE_USER)) {
             logger.info("Login successful");
             return "redirect:/user/cabinet";
-        } else if (user.getRole().equals(Role.ROLE_LIBRARIAN)){
+        } else if (user.getRole().equals(Role.ROLE_LIBRARIAN)) {
             logger.info("Login successful");
             return "redirect:/librarian/cabinet";
-        }else if (user.getRole().equals(Role.ROLE_ADMIN)){
+        } else if (user.getRole().equals(Role.ROLE_ADMIN)) {
             logger.info("Login successful");
             return "redirect:/admin/cabinet";
         }
@@ -108,7 +107,7 @@ public class PageController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UserNotFoundException.class})
-    public String handleException(){
+    public String handleException() {
         return "/user/exception";
     }
 }

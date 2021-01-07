@@ -53,7 +53,7 @@ CREATE TABLE `user` (
 INSERT INTO book (id, author, publish_date, publisher, quantity, title) VALUES
     (1, 'Liane Moriarty', '2018-10-15', 'Penguin', 15, 'Truly, madly, guilty'),
     (2, 'John Tolkien', '1940-05-11', 'London', 12, 'Hobbit'),
-    (3, 'Джоан Роулінг', '1998-06-12', 'London', 15, 'Гаррі Поттер');
+    (3, 'Джоан Роулінг', '1998-06-12', 'Київ', 15, 'Гаррі Поттер');
 
 INSERT INTO user VALUES (1, true, 'admin@mail.com', 'admin', 'admin', '$2a$10$eq7CA.nRCeMt18n4RVqRGO/y.2KX/v7y9.8wuzMDHz.K3/NW3aMj2', 'ROLE_ADMIN', null);
 INSERT INTO user VALUES (2, true, 'librarian@mail.com', 'John', 'Smith', '$2a$10$fX1kJ18YIG/PqqcOqFA1C.lU8F9RCkEwolmKfv88WUlusJjRZ0mJm', 'ROLE_LIBRARIAN', null);
