@@ -46,7 +46,7 @@ public class PageController {
     @GetMapping("/login")
     public String login() {
         logger.info("Login page visited");
-        return "login";
+        return "/login";
     }
 
     /**
@@ -109,5 +109,11 @@ public class PageController {
     @ExceptionHandler({UserNotFoundException.class})
     public String handleException() {
         return "/user/exception";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({Exception.class})
+    public String handleNotFound(){
+        return "/404";
     }
 }

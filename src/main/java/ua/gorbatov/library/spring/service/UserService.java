@@ -178,7 +178,7 @@ public class UserService {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending()
                 : Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        List<User> list = getUsersExceptAdmin();
-        return new PageImpl<>(list, pageable, list.size());
+        return userRepository.findByRoleNotLike(Role.ROLE_ADMIN,pageable);
+
     }
 }
