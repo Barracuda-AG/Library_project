@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import ua.gorbatov.library.spring.dto.UserDTO;
 import ua.gorbatov.library.spring.entity.Role;
 import ua.gorbatov.library.spring.entity.User;
@@ -111,9 +112,4 @@ public class PageController {
         return "/user/exception";
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({Exception.class})
-    public String handleNotFound(){
-        return "/404";
-    }
 }
