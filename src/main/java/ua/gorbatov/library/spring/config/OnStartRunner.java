@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Component
-public class OnStartRunner {//implements CommandLineRunner {
+public class OnStartRunner implements CommandLineRunner {
 
     private UserService userService;
 
