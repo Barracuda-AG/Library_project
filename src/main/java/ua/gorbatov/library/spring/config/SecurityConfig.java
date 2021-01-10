@@ -18,7 +18,7 @@ import ua.gorbatov.library.spring.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-@Profile(value = {"development", "production"})
+@Profile("!test")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Qualifier("userDetailsService")

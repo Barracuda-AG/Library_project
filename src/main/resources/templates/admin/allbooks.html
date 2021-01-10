@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<div class ="container">
+<header>
     <div>
         <nav class="navbar navbar-expand bg-light" >
         <ul class="navbar-nav">
@@ -30,7 +30,8 @@
         </ul>
         </nav>
     </div>
-</div>
+</header>
+<main>
 <div class="container">
     <h3>[[#{books.all}]]</h3>
 <table border="1" class="table table-striped">
@@ -75,7 +76,7 @@
             <div class="col-sm-1">
                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                     <a th:if="${currentPage != i}" th:href="@{'/admin/page_book/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
-                    <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;
+                    <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;&nbsp;
                 </span>
             </div>
             <div class="col-sm-1">
@@ -89,5 +90,7 @@
         </div>
     </div>
 </div>
+</main>
+
 </body>
 </html>

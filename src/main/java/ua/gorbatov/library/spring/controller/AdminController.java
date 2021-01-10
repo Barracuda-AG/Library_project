@@ -59,7 +59,7 @@ public class AdminController {
     }
 
     /**
-     * Method is used for mapping get request to show succes page
+     * Method is used for mapping get request to show all users page
      *
      * @param model used for adding attribute to get all users
      * @return String address of page

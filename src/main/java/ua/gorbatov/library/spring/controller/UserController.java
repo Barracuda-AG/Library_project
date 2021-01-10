@@ -94,7 +94,7 @@ public class UserController {
      */
     @Transactional
     @PostMapping(value = "/user/makeorderPost")
-    public String makeNewOrder(@RequestParam(name = "books") List<Book> books,
+    public String makeNewOrder(@RequestParam(name = "books", required = false) List<Book> books,
                                Principal principal) {
 
         String userName = principal.getName();
@@ -152,7 +152,7 @@ public class UserController {
                                 @RequestParam("sortDir") String sortDir,
                                 Model model) {
 
-        Page<Book> page = bookService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE_EIGHT, sortField, sortDir);
+        Page<Book> page = bookService.findPaginated(pageNo, Constants.NUMBERS_ON_PAGE, sortField, sortDir);
         List<Book> bookList = page.getContent().stream()
                 .filter(o -> o.getQuantity() > 0)
                 .collect(Collectors.toList());
@@ -184,6 +184,12 @@ public class UserController {
         return findPaginated(Constants.FIRST_PAGE, Constants.TITLE, Constants.ASC, model);
     }
 
+    /**
+     * Method searches books according text parameter
+     * @param text used for search condition
+     * @param model to add attributes finded books
+     * @return page with results
+     */
     @PostMapping(value = "/user/search")
     public String search(@RequestParam(name = "text") String text, Model model) {
         List<Book> bookList = bookService.findByAuthorOrTitle(text);
